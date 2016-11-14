@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import RidgeBar from './Bar.js';
-import RidgePie from './Pie.js';
+import RidgeBar from './RidgeBar.js';
+import RidgePie from './RidgePie.js';
 import StudentsPerYear from './mock_students_per_year.js'
 import './App.css';
 
