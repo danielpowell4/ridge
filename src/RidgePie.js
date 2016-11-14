@@ -28,7 +28,6 @@ class RidgePie extends Component {
     const transform='translate('+h/2+','+w/2+')';
 
     var paths = pie(this.props.data).map(function(d, i) {
-                   console.log(d, arc(d))
                    return (
                       <g className="arc" transform={transform}>
                          <path fill={fill(i)}

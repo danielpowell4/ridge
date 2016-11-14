@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import RidgeBar from './RidgeBar.js';
 import RidgePie from './RidgePie.js';
-import StudentsPerYear from './mock_students_per_year.js'
+import RidgeStacked from './RidgeStacked.js';
+import StudentsPerYear from './mock_students_per_year.js';
+import LessonsPerMonth from './mock_students_per_year.js';
 import './App.css';
 
 
@@ -15,6 +17,10 @@ class App extends Component {
         />
         <RidgePie data={StudentsPerYear}
                   dimension='student_count'
+        />
+        <RidgeStacked data={LessonsPerMonth}
+                  group_by='month'
+                  dimensions="['act', 'sat', 'college_admissions']"
         />
       </div>
     );
