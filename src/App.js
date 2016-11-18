@@ -3,7 +3,7 @@ import RidgeBar from './RidgeBar.js';
 import RidgePie from './RidgePie.js';
 import RidgeStacked from './RidgeStacked.js';
 import StudentsPerYear from './mock_students_per_year.js';
-import LessonsPerMonth from './mock_students_per_year.js';
+import LessonsPerMonth from './mock_lessons_per_month.js';
 import './App.css';
 
 
@@ -20,7 +20,7 @@ class App extends Component {
         />
         <RidgeStacked data={LessonsPerMonth}
                   group_by='month'
-                  dimensions="['act', 'sat', 'college_admissions']"
+                  y_attr='hours'
         />
       </div>
     );
