@@ -1,22 +1,19 @@
-import React, { Component } from "react";
-import logo from "./logo.svg";
+import React from "react";
 import "./App.css";
-import EmployeeHoursChart from "./components/EmployeeHoursChart";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Employees, MainMenu } from "./components";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <div className="App__content">
-          <EmployeeHoursChart coachId={316} /* Mike Cerro */ />
-        </div>
-      </div>
-    );
-  }
-}
+const Landing = _ => <div>Select a category...</div>;
+
+const App = _ => (
+  <Router>
+    <div>
+      <MainMenu />
+
+      <Route path="/employees" component={Employees} />
+      <Route exact path="/" component={Landing} />
+    </div>
+  </Router>
+);
 
 export default App;

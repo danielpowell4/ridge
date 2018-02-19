@@ -7,8 +7,6 @@ import {
   VictoryAxis,
   VictoryLabel,
   VictoryTooltip,
-  VictoryTheme,
-  VictoryStack,
 } from "victory";
 import moment from "moment";
 import fetch from "cross-fetch";
@@ -29,15 +27,14 @@ class EmployeeHoursChart extends Component {
   componentDidMount() {
     this.setState({ isFetching: true });
 
-    fetch(
-      `http://localhost:5000/data/employees/${this.props.coachId}/sytd_lessons`,
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    const employeeId = 316; // Mike Cerro placeholder
+
+    fetch(`http://localhost:5000/data/employees/${employeeId}/sytd_lessons`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
       .then(raw => raw.json())
       .then(res => {
         this.setState({
@@ -82,13 +79,13 @@ class EmployeeHoursChart extends Component {
       );
 
     return (
-      <div className="employee-hours-chart">
+      <div className="employee-hours-chart" style={styles.container}>
         <VictoryChart
           domain={{ x: xDomain, y: yDomain }}
           containerComponent={
             <VictoryZoomContainer zoomDomain={{ x: xDomain, y: yDomain }} />
           }
-          styles={{ overflow: "visible" }}
+          style={{ overflow: "visible" }}
         >
           <VictoryAxis
             dependentAxis
@@ -194,13 +191,19 @@ class EmployeeHoursChart extends Component {
 
   getStyles() {
     const MED_GREY = "#999";
-    const LIGHT_GREY = "#f0f0f0";
+    // const LIGHT_GREY = "#f0f0f0";
     const WHITE = "#fff";
     const GREEN = "#009f29";
     const LIGHT_GREEN = "#009f2994";
     const ORANGE = "#ff7400";
 
     return {
+      container: {
+        maxWidth: "660px",
+        width: "100%",
+        padding: "10px",
+        margin: "1rem auto",
+      },
       hourLine: {
         data: { stroke: GREEN },
         parent: { border: "1px solid #ccc" },
