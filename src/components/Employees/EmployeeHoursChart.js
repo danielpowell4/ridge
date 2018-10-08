@@ -6,7 +6,7 @@ import {
   VictoryZoomContainer,
   VictoryAxis,
   VictoryLabel,
-  VictoryTooltip,
+  VictoryTooltip
 } from "victory";
 import moment from "moment";
 import fetch from "cross-fetch";
@@ -20,7 +20,7 @@ class EmployeeHoursChart extends Component {
       endDate: new Date(2018, 8, 1),
       data: [],
       hourQuota: null,
-      isFetching: false,
+      isFetching: false
     };
   }
 
@@ -32,15 +32,15 @@ class EmployeeHoursChart extends Component {
     fetch(`http://localhost:5000/data/employees/${employeeId}/sytd_lessons`, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     })
       .then(raw => raw.json())
       .then(res => {
         this.setState({
           data: res.data.map(d => ({ ...d, x: moment(d.x).toDate() })),
           hourQuota: res.hourQuota,
-          isFetching: false,
+          isFetching: false
         });
       });
   }
@@ -65,7 +65,7 @@ class EmployeeHoursChart extends Component {
         <VictoryLine
           data={[
             { x: xDomain[0], y: hourQuota },
-            { x: xDomain[1], y: hourQuota },
+            { x: xDomain[1], y: hourQuota }
           ]}
           scale={{ x: "time", y: "linear" }}
           standalone={false}
@@ -124,29 +124,29 @@ class EmployeeHoursChart extends Component {
                         target: "data",
                         mutation: () => ({
                           style: styles.activeDot,
-                          size: 6,
-                        }),
+                          size: 6
+                        })
                       },
                       {
                         target: "labels",
-                        mutation: () => ({ active: true }),
-                      },
+                        mutation: () => ({ active: true })
+                      }
                     ];
                   },
                   onMouseOut: () => {
                     return [
                       {
                         target: "data",
-                        mutation: () => {},
+                        mutation: () => {}
                       },
                       {
                         target: "labels",
-                        mutation: () => ({ active: false }),
-                      },
+                        mutation: () => ({ active: false })
+                      }
                     ];
-                  },
-                },
-              },
+                  }
+                }
+              }
             ]}
           />
           <VictoryLabel
@@ -202,47 +202,47 @@ class EmployeeHoursChart extends Component {
         maxWidth: "660px",
         width: "100%",
         padding: "10px",
-        margin: "1rem auto",
+        margin: "1rem auto"
       },
       hourLine: {
         data: { stroke: GREEN },
-        parent: { border: "1px solid #ccc" },
+        parent: { border: "1px solid #ccc" }
       },
       scatter: {
-        data: { fill: GREEN, opacity: 0.3 },
+        data: { fill: GREEN, opacity: 0.3 }
       },
       activeDot: {
-        fill: ORANGE,
+        fill: ORANGE
       },
       quotaLine: {
         data: {
           stroke: LIGHT_GREEN,
           strokeWidth: 1.5,
           strokeOpacity: 0.75,
-          strokeDasharray: [5, 3],
-        },
+          strokeDasharray: [5, 3]
+        }
       },
       tooltip: {
         fill: WHITE,
-        stroke: MED_GREY,
+        stroke: MED_GREY
       },
       tooltipText: {
         fill: MED_GREY,
         fontFamily: "inherit",
-        fontSize: 12,
+        fontSize: 12
       },
       yAxisLabel: {
         fill: MED_GREY,
         fontFamily: "inherit",
         fontSize: 10,
-        fontStyle: "italic",
+        fontStyle: "italic"
       },
       quotaLabel: {
         fill: LIGHT_GREEN,
         fontFamily: "inherit",
         fontSize: 10,
         fontStyle: "italic",
-        textAnchor: "end",
+        textAnchor: "end"
       },
       axisYears: {
         axis: { stroke: MED_GREY, strokeWidth: 1 },
@@ -252,27 +252,27 @@ class EmployeeHoursChart extends Component {
             return tickSize;
           },
           stroke: MED_GREY,
-          strokeWidth: 1,
+          strokeWidth: 1
         },
         tickLabels: {
           fill: MED_GREY,
           fontFamily: "inherit",
-          fontSize: 12,
-        },
+          fontSize: 12
+        }
       },
       yAxis: {
         grid: {
           stroke: tick => (tick < 1 ? "transparent" : WHITE),
-          strokeWidth: 2,
+          strokeWidth: 2
         },
         axis: { stroke: MED_GREY, strokeWidth: 0 },
         ticks: { strokeWidth: 0 },
         tickLabels: {
           fill: MED_GREY,
           fontFamily: "inherit",
-          fontSize: 12,
-        },
-      },
+          fontSize: 12
+        }
+      }
     };
   }
 }
