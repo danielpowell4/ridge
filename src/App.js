@@ -8,14 +8,15 @@ import {
   MainMenu,
   Timegraph,
   Histogram,
-  MaterialRequests
+  MaterialRequests,
+  Referrals
 } from "./components";
 
 const Landing = _ => <div>Select a category...</div>;
 
 const App = _ => (
   <Router>
-    <div>
+    <div style={{ marginBottom: "2rem" }}>
       <MainMenu />
 
       <Route path="/employees" component={Employees} />
@@ -24,6 +25,7 @@ const App = _ => (
       <Route path="/histogram" component={Histogram} />
       <Route path="/timegraph" component={Timegraph} />
       <Route path="/material-requests" component={MaterialRequests} />
+      <Route path="/referrals" component={Referrals} />
       <Route exact path="/" component={Landing} />
     </div>
   </Router>

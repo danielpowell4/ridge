@@ -25,6 +25,9 @@ const Menu = _ => (
       <li>
         <Link to="/material-requests">Material Requests</Link>
       </li>
+      <li>
+        <Link to="/referrals">Client Referrals</Link>
+      </li>
     </ul>
   </div>
 );

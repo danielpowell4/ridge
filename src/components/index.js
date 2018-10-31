@@ -4,4 +4,5 @@ export { default as Tasks } from "./Tasks";
 export { default as Column } from "./Column";
 export { default as Histogram } from "./Histogram";
 export { default as MaterialRequests } from "./MaterialRequests";
+export { default as Referrals } from "./Referrals";
 export { default as Timegraph } from "./Timegraph";
