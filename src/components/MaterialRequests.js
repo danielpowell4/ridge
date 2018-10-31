@@ -196,7 +196,7 @@ class RelativeStackedBar extends Component {
     );
     return dataset.map(data =>
       data.map((datum, i) => {
-        if (totals[i] == 0) {
+        if (totals[i] === 0) {
           return {
             x: datum.x,
             y: 0,
