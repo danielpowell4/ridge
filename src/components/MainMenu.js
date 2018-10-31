@@ -13,6 +13,18 @@ const Menu = _ => (
       <li>
         <Link to="/tasks">Tasks</Link>
       </li>
+      <li>
+        <Link to="/column">Column</Link>
+      </li>
+      <li>
+        <Link to="/histogram">Histogram</Link>
+      </li>
+      <li>
+        <Link to="/timegraph">Timegraph</Link>
+      </li>
+      <li>
+        <Link to="/material-requests">Material Requests</Link>
+      </li>
     </ul>
   </div>
 );
