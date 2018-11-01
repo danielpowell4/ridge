@@ -9,7 +9,8 @@ import {
   Timegraph,
   Histogram,
   MaterialRequests,
-  Referrals
+  Referrals,
+  SummaryTurnaround
 } from "./components";
 
 const Landing = _ => <div>Select a category...</div>;
@@ -23,7 +24,8 @@ const App = _ => (
         <Route path="/tasks" component={Tasks} />
         <Route path="/column" component={Column} />
         <Route path="/histogram" component={Histogram} />
-        <Route path="/lesson-turnaround" component={Timegraph} />
+        <Route path="/timegraph" component={Timegraph} />
+        <Route path="/lesson-turnaround" component={SummaryTurnaround} />
         <Route path="/material-requests" component={MaterialRequests} />
         <Route path="/referrals" component={Referrals} />
         <Route exact path="/" component={Landing} />

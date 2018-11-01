@@ -16,8 +16,8 @@ class Timegraph extends Component {
     super(props);
     this.state = {
       chartActive: false,
-      startDate: moment().subtract(30, "day"),
-      endDate: moment().add(5, "day"),
+      startDate: moment().subtract(31, "day"),
+      endDate: moment().add(1, "day"),
       data: [],
       isFetching: false
     };
@@ -86,85 +86,69 @@ class Timegraph extends Component {
     );
 
     return (
-      <div className="employee-hours-chart" style={styles.container}>
-        <VictoryChart
-          domain={{ x: xDomain, y: yDomain }}
-          containerComponent={
-            <VictoryZoomContainer zoomDomain={{ x: xDomain, y: yDomain }} />
+      <VictoryChart
+        domain={{ x: xDomain, y: yDomain }}
+        containerComponent={
+          <VictoryZoomContainer zoomDomain={{ x: xDomain, y: yDomain }} />
+        }
+        style={{ overflow: "visible" }}
+        width={600}
+        height={300}
+      >
+        <VictoryAxis
+          dependentAxis
+          domain={yDomain}
+          offsetX={50}
+          orientation="left"
+          standalone={false}
+          style={styles.yAxis}
+          tickCount={6}
+        />
+        <VictoryAxis scale="time" standalone={false} style={styles.axisYears} />
+        {quotaLine}
+        {averageLine}
+        <VictoryScatter
+          data={data}
+          scale={{ x: "time", y: "linear" }}
+          size={2}
+          style={styles.scatter}
+          labelComponent={
+            <VictoryTooltip
+              flyoutStyle={styles.tooltip}
+              cornerRadius={0}
+              style={styles.tooltipText}
+            />
           }
-          style={{ overflow: "visible" }}
-        >
-          <VictoryAxis
-            dependentAxis
-            domain={yDomain}
-            offsetX={50}
-            orientation="left"
-            standalone={false}
-            style={styles.yAxis}
-            tickCount={6}
-          />
-          <VictoryAxis
-            scale="time"
-            standalone={false}
-            style={styles.axisYears}
-          />
-          {quotaLine}
-          {averageLine}
-          <VictoryScatter
-            data={data}
-            scale={{ x: "time", y: "linear" }}
-            size={2}
-            style={styles.scatter}
-            labelComponent={
-              <VictoryTooltip
-                flyoutStyle={styles.tooltip}
-                cornerRadius={0}
-                style={styles.tooltipText}
-              />
-            }
-            events={[
-              {
-                target: "data",
-                eventHandlers: {
-                  onMouseOver: () => {
-                    return [
-                      {
-                        target: "data",
-                        mutation: () => ({
-                          style: styles.activeDot,
-                          size: 6
-                        })
-                      },
-                      {
-                        target: "labels",
-                        mutation: () => ({ active: true })
-                      }
-                    ];
-                  },
-                  onMouseOut: () => {
-                    return [
-                      {
-                        target: "data",
-                        mutation: () => {}
-                      },
-                      {
-                        target: "labels",
-                        mutation: () => ({ active: false })
-                      }
-                    ];
-                  }
+          events={[
+            {
+              target: "data",
+              eventHandlers: {
+                onMouseOver: () => {
+                  return [
+                    {
+                      target: "data",
+                      mutation: () => ({ style: styles.activeDot, size: 6 })
+                    },
+                    { target: "labels", mutation: () => ({ active: true }) }
+                  ];
+                },
+                onMouseOut: () => {
+                  return [
+                    { target: "data", mutation: () => {} },
+                    { target: "labels", mutation: () => ({ active: false }) }
+                  ];
                 }
               }
-            ]}
-          />
-          <VictoryLabel
-            x={18}
-            y={32}
-            style={styles.yAxisLabel}
-            text={"Summary Turnaround"}
-          />
-        </VictoryChart>
-      </div>
+            }
+          ]}
+        />
+        {/* <VictoryLabel
+          x={18}
+          y={32}
+          style={styles.yAxisLabel}
+          text={"Summary Turnaround"}
+        /> */}
+      </VictoryChart>
     );
   }
 

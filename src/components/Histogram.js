@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   VictoryAxis,
-  VictoryContainer,
   VictoryChart,
   VictoryTooltip,
   VictoryBar,
@@ -65,16 +64,16 @@ class Histogram extends Component {
         <VictoryChart
           theme={VictoryTheme.material}
           domain={{ x: xDomain }}
-          domainPadding={{ x: this.state.stepSize }}
+          domainPadding={{ x: this.state.stepSize * 2 }}
+          height={400}
+          width={400}
         >
-          <VictoryAxis dependentAxis offset="left" />
-          <VictoryAxis tickCount={5} />
+          <VictoryAxis dependentAxis offset="left" offsetX={50} />
+          <VictoryAxis tickCount={this.props.steps} />
           <VictoryBar
             barRatio={0.9}
             alignment="middle"
-            style={{
-              data: { fill: "tomato" }
-            }}
+            style={{ data: { fill: "tomato" } }}
             data={this.state.data}
             labelComponent={<VictoryTooltip />}
           />

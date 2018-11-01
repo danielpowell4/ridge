@@ -23,9 +23,6 @@ const Menu = _ => (
     <NavLink activeClassName="active" to="/tasks">
       Tasks
     </NavLink>
-    <NavLink activeClassName="active" to="/histogram">
-      Histogram
-    </NavLink>
   </nav>
 );
 
