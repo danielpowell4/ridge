@@ -18,15 +18,16 @@ const App = _ => (
   <Router>
     <div style={{ marginBottom: "2rem" }}>
       <MainMenu />
-
-      <Route path="/employees" component={Employees} />
-      <Route path="/tasks" component={Tasks} />
-      <Route path="/column" component={Column} />
-      <Route path="/histogram" component={Histogram} />
-      <Route path="/timegraph" component={Timegraph} />
-      <Route path="/material-requests" component={MaterialRequests} />
-      <Route path="/referrals" component={Referrals} />
-      <Route exact path="/" component={Landing} />
+      <main style={{ padding: "1rem 0" }}>
+        <Route path="/employees" component={Employees} />
+        <Route path="/tasks" component={Tasks} />
+        <Route path="/column" component={Column} />
+        <Route path="/histogram" component={Histogram} />
+        <Route path="/lesson-turnaround" component={Timegraph} />
+        <Route path="/material-requests" component={MaterialRequests} />
+        <Route path="/referrals" component={Referrals} />
+        <Route exact path="/" component={Landing} />
+      </main>
     </div>
   </Router>
 );

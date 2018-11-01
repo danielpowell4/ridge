@@ -1,3 +1,18 @@
+body {
+  font-family: Roboto, "Helvetica Neue", Helvetica, sans-serif;
+}
+
 .App {
   text-align: center;
+}
+
+nav a {
+  padding: 0.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  color: #7d7b7b;
+}
+
+nav a.active {
+  color: #141942;
 }

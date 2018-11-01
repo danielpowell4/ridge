@@ -1,35 +1,32 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Menu = _ => (
-  <div className="menu-container">
-    <ul>
-      <li>
-        <Link to="/">Home</Link>
-      </li>
-      <li>
-        <Link to="/employees">Employees</Link>
-      </li>
-      <li>
-        <Link to="/tasks">Tasks</Link>
-      </li>
-      <li>
-        <Link to="/column">Column</Link>
-      </li>
-      <li>
-        <Link to="/histogram">Histogram</Link>
-      </li>
-      <li>
-        <Link to="/timegraph">Timegraph</Link>
-      </li>
-      <li>
-        <Link to="/material-requests">Material Requests</Link>
-      </li>
-      <li>
-        <Link to="/referrals">Client Referrals</Link>
-      </li>
-    </ul>
-  </div>
+  <nav
+    style={{
+      padding: ".85rem 1.5rem",
+      boxShadow: "0 1px 1px rgba(0,0,0,.15)",
+      backgroundColor: "#fff",
+      display: "flex",
+      alignItems: "center"
+    }}
+  >
+    <NavLink activeClassName="active" to="/material-requests">
+      Material Requests
+    </NavLink>
+    <NavLink activeClassName="active" to="/referrals">
+      Client Referrals
+    </NavLink>
+    <NavLink activeClassName="active" to="/lesson-turnaround">
+      Lesson Turnaround
+    </NavLink>
+    <NavLink activeClassName="active" to="/tasks">
+      Tasks
+    </NavLink>
+    <NavLink activeClassName="active" to="/histogram">
+      Histogram
+    </NavLink>
+  </nav>
 );
 
 export default Menu;
