@@ -18,7 +18,7 @@ const Landing = _ => <div>Select a category...</div>;
 
 const baseUrl = `/ridge`; // for gh-pages
 
-const App = _ => (
+const App = (_) => (
   <Router>
     <div style={{ marginBottom: "2rem" }}>
       <MainMenu />
@@ -28,12 +28,18 @@ const App = _ => (
         <Route path={`${baseUrl}/column`} component={Column} />
         <Route path={`${baseUrl}/histogram`} component={Histogram} />
         <Route path={`${baseUrl}/timegraph`} component={Timegraph} />
-        <Route path={`${baseUrl}/lesson-turnaround`} component={SummaryTurnaround} />
-        <Route path={`${baseUrl}/material-requests`} component={MaterialRequests} />
+        <Route
+          path={`${baseUrl}/lesson-turnaround`}
+          component={SummaryTurnaround}
+        />
+        <Route
+          path={`${baseUrl}/material-requests`}
+          component={MaterialRequests}
+        />
         <Route path={`${baseUrl}/referrals`} component={Referrals} />
         <Route path={`${baseUrl}/projections`} component={Projections} />
-        <Route exact path={baseUrl} component={Landing} />
-        <Route exact path="/" component={Landing} />
+        <Route exact path={baseUrl} component={Projections} />
+        <Route exact path="/" component={Projections} />
       </main>
     </div>
   </Router>
