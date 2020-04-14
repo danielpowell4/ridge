@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   VictoryAxis,
   VictoryChart,
   VictoryTooltip,
   VictoryBar,
-  VictoryTheme
-} from "victory";
-import { turnaround as dummyData } from "../lib/sampleData";
+  VictoryTheme,
+} from 'victory';
+import { turnaround as dummyData } from '../lib/sampleData';
 
 const buildHistogram = (data, key, steps) => {
   const min = data.reduce(
@@ -23,11 +23,11 @@ const buildHistogram = (data, key, steps) => {
   let compiled = [];
   for (let i = min; i < max; i = i + stepSize) {
     let nextStep = i + stepSize;
-    let count = data.filter(d => d[key] > i && d[key] < nextStep).length;
+    let count = data.filter((d) => d[key] > i && d[key] < nextStep).length;
     compiled.push({
       x: (i + nextStep) / 2,
       y: count,
-      label: `${i.toFixed(2)}-${nextStep.toFixed(2)}: ${count}`
+      label: `${i.toFixed(2)}-${nextStep.toFixed(2)}: ${count}`,
     });
   }
 
@@ -37,7 +37,7 @@ const buildHistogram = (data, key, steps) => {
 class Histogram extends Component {
   state = {
     stepSize: 0,
-    data: []
+    data: [],
   };
 
   componentDidMount() {
@@ -56,11 +56,11 @@ class Histogram extends Component {
     }
     const xDomain = [
       this.state.min - this.state.stepSize,
-      this.state.max + this.state.stepSize
+      this.state.max + this.state.stepSize,
     ];
 
     return (
-      <div style={{ maxWidth: 400, width: "100%" }}>
+      <div style={{ maxWidth: 400, width: '100%' }}>
         <VictoryChart
           theme={VictoryTheme.material}
           domain={{ x: xDomain }}
@@ -73,7 +73,7 @@ class Histogram extends Component {
           <VictoryBar
             barRatio={0.9}
             alignment="middle"
-            style={{ data: { fill: "tomato" } }}
+            style={{ data: { fill: 'tomato' } }}
             data={this.state.data}
             labelComponent={<VictoryTooltip />}
           />
@@ -86,7 +86,7 @@ class Histogram extends Component {
 Histogram.defaultProps = {
   steps: 10,
   data: dummyData,
-  key: "turnaround"
+  key: 'turnaround',
 };
 
 export default Histogram;
