@@ -10,7 +10,8 @@ import {
   Histogram,
   MaterialRequests,
   Referrals,
-  SummaryTurnaround
+  SummaryTurnaround,
+  Projections
 } from "./components";
 
 const Landing = _ => <div>Select a category...</div>;
@@ -28,6 +29,7 @@ const App = _ => (
         <Route path="/lesson-turnaround" component={SummaryTurnaround} />
         <Route path="/material-requests" component={MaterialRequests} />
         <Route path="/referrals" component={Referrals} />
+        <Route path="/projections" component={Projections} />
         <Route exact path="/" component={Landing} />
       </main>
     </div>
