@@ -244,15 +244,19 @@ const Projections = () => {
         });
 
   const fullRange = activeData.map((d) => d.y);
-  const data2018 = activeData.filter(({ x }) => {
+  const dataSegmentOne = activeData.filter(({ x }) => {
     return x > moment("2018-08-01") && x < moment("2018-12-01");
   });
-  const data2019 = activeData.filter(({ x }) => {
+  const dataSegmentTwo = activeData.filter(({ x }) => {
     return x > moment("2019-08-01") && x < moment("2019-12-01");
   });
 
-  const data2018Y = !!data2018.length ? data2018.map((d) => d.y) : [0];
-  const data2019Y = !!data2019.length ? data2019.map((d) => d.y) : [0];
+  const dataSegmentOneValues = !!dataSegmentOne.length
+    ? dataSegmentOne.map((d) => d.y)
+    : [0];
+  const dataSegmentTwoValues = !!dataSegmentTwo.length
+    ? dataSegmentTwo.map((d) => d.y)
+    : [0];
 
   return (
     <div>
@@ -301,7 +305,7 @@ const Projections = () => {
                 <BarTime
                   width={400}
                   height={200}
-                  dataset={data2018}
+                  dataset={dataSegmentOne}
                   fullRange={fullRange}
                 />
               </div>
@@ -309,7 +313,7 @@ const Projections = () => {
                 <BarTime
                   width={400}
                   height={200}
-                  dataset={data2019}
+                  dataset={dataSegmentTwo}
                   fullRange={fullRange}
                 />
               </div>
@@ -336,17 +340,25 @@ const Projections = () => {
                     ["Min", min],
                   ].map((pair, i) => {
                     const [label, callback] = pair;
-                    let num2018 = callback.call(undefined, data2018Y);
-                    let num2019 = callback.call(undefined, data2019Y);
-                    let delta = num2019 - num2018;
+                    let segOneValue = callback.call(
+                      undefined,
+                      dataSegmentOneValues
+                    );
+                    let segTwoValue = callback.call(
+                      undefined,
+                      dataSegmentTwoValues
+                    );
+                    let delta = segTwoValue - segOneValue;
 
                     return (
                       <tr key={i}>
                         <td>{label}</td>
-                        <td>{num2018.toFixed(2)}</td>
-                        <td>{num2019.toFixed(2)}</td>
+                        <td>{segOneValue.toFixed(2)}</td>
+                        <td>{segTwoValue.toFixed(2)}</td>
                         <td>{delta.toFixed(2)}</td>
-                        <td>{`${((delta / num2018) * 100).toFixed(2)}%`}</td>
+                        <td>{`${((delta / segOneValue) * 100).toFixed(
+                          2
+                        )}%`}</td>
                       </tr>
                     );
                   })}
