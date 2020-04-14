@@ -1,22 +1,27 @@
 {
   "name": "ridge",
+  "homepage": "https://danielpowell4.github.io/ridge",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "cross-fetch": "^1.1.1",
+    "gh-pages": "^2.2.0",
     "moment": "^2.20.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^2.1.1",
+    "react-select": "^3.1.0",
     "simple-statistics": "^6.1.1",
     "victory": "^0.25.6"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "build": "react-scripts build && cp build/index.html build/404.html",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -b projections -d build"
   },
   "browserslist": [
     ">0.2%",
