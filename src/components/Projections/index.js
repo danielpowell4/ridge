@@ -293,7 +293,8 @@ const Projections = () => {
                 />
               </div>
               <h2 style={{ textAlign: `center` }}>
-                Simple Stat Breakdown: {dimension}
+                {`${category} ${dimension} in ${market.name}`} | Simple Stat
+                Breakdown
               </h2>
               <table>
                 <thead>
