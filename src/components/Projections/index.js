@@ -86,13 +86,13 @@ const Filters = ({ filters }) => (
     {filters.map((filter) => (
       <li key={filter.label}>
         <strong>{filter.label}</strong>
-        {filter.type == `Select` ? (
+        {filter.type === `Select` ? (
           <Select
             options={filter.options}
             selected={filter.selected}
             onChange={filter.onChange}
           />
-        ) : filter.type == `date` ? (
+        ) : filter.type === `date` ? (
           <input
             type={filter.type}
             value={filter.selected}
@@ -231,14 +231,14 @@ const Projections = () => {
     {
       label: `Subject Category`,
       options: categoryOptions,
-      selected: categoryOptions.filter((opt) => opt.value == category),
+      selected: categoryOptions.filter((opt) => opt.value === category),
       onChange: (selected) => setCategory(selected.value),
       type: `Select`,
     },
     {
       label: `Dimension`,
       options: dimensionOptions,
-      selected: dimensionOptions.filter((opt) => opt.value == dimension),
+      selected: dimensionOptions.filter((opt) => opt.value === dimension),
       onChange: (selected) => setDimension(selected.value),
       type: `Select`,
     },
