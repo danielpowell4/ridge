@@ -21,13 +21,13 @@ import {
   max,
 } from "simple-statistics";
 
-import market from "./2020_april_by_market_by_category.json";
+import allData from "./2020_april_by_market_by_category_with_grades.json";
 
 // setup options
-const marketOptions = market.map((market) => ({
-  value: market.market_id,
-  label: market.name,
-  ...market,
+const marketOptions = allData.map((marketGroup) => ({
+  value: marketGroup.name,
+  label: marketGroup.name,
+  ...marketGroup,
 }));
 const categoryOptions = [
   "Admissions Consulting",
@@ -46,7 +46,28 @@ const categoryOptions = [
   "SSAP Prep",
 ].map((cat) => ({ value: cat, label: cat }));
 
-const dimensionOptions = ["hours", "students", "coaches"].map((dim) => ({
+const dimensionOptions = [
+  "hours",
+  "coaches",
+  "all_students",
+  "High School Senior",
+  "High School Junior",
+  "High School Sophomore",
+  "High School Freshman",
+  "College Senior",
+  "College Junior",
+  "College Sophomore",
+  "College Freshman",
+  "Grade 1",
+  "Grade 2",
+  "Grade 3",
+  "Grade 4",
+  "Grade 5",
+  "Grade 6",
+  "Grade 7",
+  "Grade 8",
+  "Kindergarten",
+].map((dim) => ({
   value: dim,
   label: dim,
 }));
@@ -210,14 +231,14 @@ const Projections = () => {
   const activeData =
     !market || !category || !dimension
       ? []
-      : Object.keys(market.week).map((weekDateString) => {
-          let val = market.week[weekDateString][category][dimension];
+      : market.weeks.map((weekData) => {
+          let val = weekData[category][dimension];
 
           return {
-            x: new Date(weekDateString),
+            x: new Date(weekData.start_date),
             y: val,
             label: `${val} ${dimension} | Week of ${moment(
-              weekDateString
+              weekData.start_date
             ).format("L")}`,
           };
         });
