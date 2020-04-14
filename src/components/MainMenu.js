@@ -1,17 +1,17 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const Menu = _ => (
+const Menu = (_) => (
   <nav
     style={{
       padding: ".85rem 1.5rem",
       boxShadow: "0 1px 1px rgba(0,0,0,.15)",
       backgroundColor: "#fff",
       display: "flex",
-      alignItems: "center"
+      alignItems: "center",
     }}
   >
-    <NavLink activeClassName="active" to="/material-requests">
+    {/* <NavLink activeClassName="active" to="/material-requests">
       Material Requests
     </NavLink>
     <NavLink activeClassName="active" to="/referrals">
@@ -22,6 +22,12 @@ const Menu = _ => (
     </NavLink>
     <NavLink activeClassName="active" to="/tasks">
       Tasks
+    </NavLink>
+    <NavLink activeClassName="active" to="/employees">
+      Employees
+    </NavLink> */}
+    <NavLink activeClassName="active" to="/projections">
+      Projections
     </NavLink>
   </nav>
 );

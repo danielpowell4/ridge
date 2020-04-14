@@ -1,16 +1,20 @@
 import React from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import EmployeeHoursChart from "./EmployeeHoursChart";
+import Utilization from "./Utilization";
 import { Widget } from "../shared";
 
 const Landing = ({ match }) => (
-  <div>
+  <div style={{ padding: 10, maxWidth: 900, width: "100%", margin: "auto" }}>
     <h2>Employees</h2>
     <ul>
       <li>
         <Link to={`${match.url}/coach_quota_progress`}>
           Coach Quota Progress
         </Link>
+      </li>
+      <li>
+        <Link to={`${match.url}/utilization`}>Utilization</Link>
       </li>
     </ul>
     <Switch>
@@ -19,7 +23,7 @@ const Landing = ({ match }) => (
         path={`${match.url}/coach_quota_progress`}
         component={EmployeeHoursChart}
       />
-      <Route path={`${match.url}/:urlString`} component={Widget} />
+      <Route path={`${match.url}/utilization`} component={Utilization} />
       <Route
         exact
         path={match.url}
