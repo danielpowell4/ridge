@@ -86,11 +86,21 @@ const Filters = ({ filters }) => (
     {filters.map((filter) => (
       <li key={filter.label}>
         <strong>{filter.label}</strong>
-        <Select
-          options={filter.options}
-          selected={filter.selected}
-          onChange={filter.onChange}
-        />
+        {filter.type == `Select` ? (
+          <Select
+            options={filter.options}
+            selected={filter.selected}
+            onChange={filter.onChange}
+          />
+        ) : filter.type == `date` ? (
+          <input
+            type={filter.type}
+            value={filter.selected}
+            onChange={filter.onChange}
+          />
+        ) : (
+          <p style={{ color: `red` }}>Unsupported filter type</p>
+        )}
       </li>
     ))}
   </ul>
@@ -159,6 +169,7 @@ const BarTime = ({
   width = 400,
   dataset,
   fullRange = dataset.map((d) => d.y),
+  timeTickFormat = (t) => moment(t).format("MMM YY"),
 }) => {
   const yDomain = [0, Math.max(...fullRange) * 1.05];
 
@@ -187,7 +198,7 @@ const BarTime = ({
       <VictoryAxis
         scale="time"
         standalone={false}
-        tickFormat={(t) => moment(t).format("MMM YY")}
+        tickFormat={timeTickFormat}
       />
       <VictoryAxis
         dependentAxis
@@ -206,6 +217,8 @@ const Projections = () => {
   const [market, setMarket] = useState();
   const [category, setCategory] = useState();
   const [dimension, setDimension] = useState();
+  const [segmentStart, setSegmentStart] = useState("2018-08-01");
+  const [segmentEnd, setSegmentEnd] = useState("2018-12-01");
 
   const filters = [
     {
@@ -213,18 +226,33 @@ const Projections = () => {
       options: marketOptions,
       selected: market,
       onChange: setMarket,
+      type: `Select`,
     },
     {
       label: `Subject Category`,
       options: categoryOptions,
       selected: categoryOptions.filter((opt) => opt.value == category),
       onChange: (selected) => setCategory(selected.value),
+      type: `Select`,
     },
     {
       label: `Dimension`,
       options: dimensionOptions,
       selected: dimensionOptions.filter((opt) => opt.value == dimension),
       onChange: (selected) => setDimension(selected.value),
+      type: `Select`,
+    },
+    {
+      label: `First Segment Starts`,
+      selected: segmentStart,
+      onChange: (e) => setSegmentStart(e.target.value),
+      type: `date`,
+    },
+    {
+      label: `First Segment Ends`,
+      selected: segmentEnd,
+      onChange: (e) => setSegmentEnd(e.target.value),
+      type: `date`,
     },
   ];
 
@@ -244,11 +272,42 @@ const Projections = () => {
         });
 
   const fullRange = activeData.map((d) => d.y);
+  const segmentOneStart = moment(segmentStart);
+  const segmentOneEnd = moment(segmentEnd);
+  const segmentTwoStart = moment(segmentStart).add(1, "year");
+  const segmentTwoEnd = moment(segmentEnd).add(1, "year");
+
+  if (
+    !segmentOneStart.isValid() ||
+    !segmentOneEnd.isValid() ||
+    segmentOneEnd <= segmentOneStart
+  ) {
+    return (
+      <div>
+        <Filters filters={filters} />
+        <hr style={{ maxWidth: 660, margin: `1rem auto` }} />
+        <pre>
+          first segment starts:{" "}
+          {segmentOneStart.isValid()
+            ? segmentOneStart.format("L")
+            : "Not Valid"}
+        </pre>
+        <pre>
+          first segment ends:{" "}
+          {segmentOneEnd.isValid() ? segmentOneEnd.format("L") : "Not Valid"}
+          {segmentOneEnd <= segmentOneStart
+            ? `Must be after segment start`
+            : ``}
+        </pre>
+      </div>
+    );
+  }
+
   const dataSegmentOne = activeData.filter(({ x }) => {
-    return x > moment("2018-08-01") && x < moment("2018-12-01");
+    return x > segmentOneStart && x < segmentOneEnd;
   });
   const dataSegmentTwo = activeData.filter(({ x }) => {
-    return x > moment("2019-08-01") && x < moment("2019-12-01");
+    return x > segmentTwoStart && x < segmentTwoEnd;
   });
 
   const dataSegmentOneValues = !!dataSegmentOne.length
@@ -307,6 +366,7 @@ const Projections = () => {
                   height={200}
                   dataset={dataSegmentOne}
                   fullRange={fullRange}
+                  timeTickFormat={(t) => moment(t).format("M/D")}
                 />
               </div>
               <div style={{ width: "48%" }}>
@@ -315,6 +375,7 @@ const Projections = () => {
                   height={200}
                   dataset={dataSegmentTwo}
                   fullRange={fullRange}
+                  timeTickFormat={(t) => moment(t).format("M/D")}
                 />
               </div>
               <h2 style={{ textAlign: `center` }}>
@@ -325,13 +386,24 @@ const Projections = () => {
                 <thead>
                   <tr>
                     <th>Stat</th>
-                    <th>Aug - Nov 2018</th>
-                    <th>Aug - Nov 2019</th>
+                    <th>{`${segmentOneStart.format(
+                      "L"
+                    )} - ${segmentOneEnd.format("L")}`}</th>
+                    <th>{`${segmentTwoStart.format(
+                      "L"
+                    )} - ${segmentTwoEnd.format("L")}`}</th>
                     <th>Raw Change</th>
                     <th>% Change</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td>Num Weeks</td>
+                    <td>{dataSegmentOneValues.length}</td>
+                    <td>{dataSegmentTwoValues.length}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
                   {[
                     ["Max", max],
                     ["Mean", mean],
