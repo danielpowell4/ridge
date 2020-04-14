@@ -11,10 +11,10 @@ import {
   MaterialRequests,
   Referrals,
   SummaryTurnaround,
-  Projections
+  Projections,
 } from "./components";
 
-const Landing = _ => <div>Select a category...</div>;
+const Landing = (_) => <div>Select a category...</div>;
 
 const baseUrl = `/ridge`; // for gh-pages
 
