@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 import {
   VictoryBar,
   VictoryTooltip,
   VictoryChart,
   VictoryScatter,
-} from 'victory';
-import dummyData from '../lib/taskData';
+} from "victory";
+import dummyData from "../lib/taskData";
 
 const dayPair = {
-  0: 'Sun',
-  1: 'Mon',
-  2: 'Tue',
-  3: 'Wed',
-  4: 'Thu',
-  5: 'Fri',
-  6: 'Sat',
+  0: "Sun",
+  1: "Mon",
+  2: "Tue",
+  3: "Wed",
+  4: "Thu",
+  5: "Fri",
+  6: "Sat",
 };
 
 const groupByWDay = (data) => {
@@ -71,7 +71,7 @@ class Tasks extends React.Component {
     super();
     this.state = {
       style: {
-        data: { fill: 'tomato' },
+        data: { fill: "tomato" },
       },
     };
   }
@@ -99,10 +99,10 @@ class Tasks extends React.Component {
     return (
       <div
         style={{
-          margin: '0 auto',
-          display: 'flex',
-          flexFlow: 'row wrap',
-          alignItems: 'center',
+          margin: "0 auto",
+          display: "flex",
+          flexFlow: "row wrap",
+          alignItems: "center",
           maxWidth: 660,
         }}
       >
@@ -114,7 +114,7 @@ class Tasks extends React.Component {
           height={400}
           domain={{ y: [0, Math.max(...dayData.map((d) => d.y)) * 1.05] }}
           style={{
-            data: { fill: 'tomato', stroke: '#ccc', strokeWidth: 3 },
+            data: { fill: "tomato", stroke: "#ccc", strokeWidth: 3 },
             parent: { flexGrow: 1, flexShrink: 0, flexBasis: 240 },
           }}
         />
@@ -131,7 +131,7 @@ class Tasks extends React.Component {
             labelComponent={
               <VictoryTooltip
                 cornerRadius={0}
-                flyoutStyle={{ fill: 'white' }}
+                flyoutStyle={{ fill: "white" }}
               />
             }
             labels={(d) => d.y}
@@ -150,7 +150,7 @@ class Tasks extends React.Component {
             labelComponent={
               <VictoryTooltip
                 cornerRadius={0}
-                flyoutStyle={{ fill: 'white' }}
+                flyoutStyle={{ fill: "white" }}
               />
             }
             labels={(d) => `${d.y.toFixed(2)}%`}
@@ -160,7 +160,7 @@ class Tasks extends React.Component {
           height={400}
           width={400}
           domainPadding={{ x: 5, y: [0, 20] }}
-          scale={{ x: 'time' }}
+          scale={{ x: "time" }}
           style={{ parent: { flexGrow: 1, flexShrink: 0, flexBasis: 240 } }}
         >
           <VictoryBar
@@ -170,7 +170,7 @@ class Tasks extends React.Component {
             labelComponent={
               <VictoryTooltip
                 cornerRadius={0}
-                flyoutStyle={{ fill: 'white' }}
+                flyoutStyle={{ fill: "white" }}
               />
             }
             labels={(d) => d.y}
@@ -180,7 +180,7 @@ class Tasks extends React.Component {
           height={400}
           width={400}
           domainPadding={{ x: 5, y: [0, 20] }}
-          scale={{ x: 'time' }}
+          scale={{ x: "time" }}
           style={{ parent: { flexGrow: 1, flexShrink: 0, flexBasis: 240 } }}
         >
           <VictoryBar
@@ -190,7 +190,7 @@ class Tasks extends React.Component {
             labelComponent={
               <VictoryTooltip
                 cornerRadius={0}
-                flyoutStyle={{ fill: 'white' }}
+                flyoutStyle={{ fill: "white" }}
               />
             }
             labels={(d) => `${d.y.toFixed(2)}%`}
@@ -198,18 +198,18 @@ class Tasks extends React.Component {
         </VictoryChart>
         <VictoryChart
           domain={scatterDomain}
-          scale={{ x: 'time' }}
+          scale={{ x: "time" }}
           style={{ parent: { flexGrow: 1, flexShrink: 0, flexBasis: 240 } }}
         >
           <VictoryScatter
-            style={{ data: { fill: 'tomato' } }}
+            style={{ data: { fill: "tomato" } }}
             domain={scatterDomain}
             domainPadding={{ y: scatterDomain.y[1] / 10 }}
             data={incrementedData}
             labelComponent={
               <VictoryTooltip
                 cornerRadius={0}
-                flyoutStyle={{ fill: 'white' }}
+                flyoutStyle={{ fill: "white" }}
               />
             }
           />
