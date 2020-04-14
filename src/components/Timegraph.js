@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   VictoryLine,
   VictoryScatter,
@@ -7,17 +7,17 @@ import {
   VictoryAxis,
   VictoryLabel,
   VictoryTooltip,
-} from 'victory';
-import moment from 'moment';
-import { turnaround as dummyData } from '../lib/sampleData';
+} from "victory";
+import moment from "moment";
+import { turnaround as dummyData } from "../lib/sampleData";
 
 class Timegraph extends Component {
   constructor(props) {
     super(props);
     this.state = {
       chartActive: false,
-      startDate: moment().subtract(31, 'day'),
-      endDate: moment().add(1, 'day'),
+      startDate: moment().subtract(31, "day"),
+      endDate: moment().add(1, "day"),
       data: [],
       isFetching: false,
     };
@@ -56,11 +56,11 @@ class Timegraph extends Component {
             { x: xDomain[0], y: hourQuota },
             { x: xDomain[1], y: hourQuota },
           ]}
-          scale={{ x: 'time', y: 'linear' }}
+          scale={{ x: "time", y: "linear" }}
           standalone={false}
           style={styles.quotaLine}
           labelComponent={
-            <VictoryLabel style={styles.quotaLabel} text={'Hour Quota'} />
+            <VictoryLabel style={styles.quotaLabel} text={"Hour Quota"} />
           }
         />
       ) : (
@@ -74,7 +74,7 @@ class Timegraph extends Component {
           { x: xDomain[0], y: average },
           { x: xDomain[1], y: average },
         ]}
-        scale={{ x: 'time', y: 'linear' }}
+        scale={{ x: "time", y: "linear" }}
         standalone={false}
         style={styles.quotaLine}
         labelComponent={
@@ -94,7 +94,7 @@ class Timegraph extends Component {
         containerComponent={
           <VictoryZoomContainer zoomDomain={{ x: xDomain, y: yDomain }} />
         }
-        style={{ overflow: 'visible' }}
+        style={{ overflow: "visible" }}
         width={600}
         height={300}
       >
@@ -112,7 +112,7 @@ class Timegraph extends Component {
         {averageLine}
         <VictoryScatter
           data={data}
-          scale={{ x: 'time', y: 'linear' }}
+          scale={{ x: "time", y: "linear" }}
           size={2}
           style={styles.scatter}
           labelComponent={
@@ -124,21 +124,21 @@ class Timegraph extends Component {
           }
           events={[
             {
-              target: 'data',
+              target: "data",
               eventHandlers: {
                 onMouseOver: () => {
                   return [
                     {
-                      target: 'data',
+                      target: "data",
                       mutation: () => ({ style: styles.activeDot, size: 6 }),
                     },
-                    { target: 'labels', mutation: () => ({ active: true }) },
+                    { target: "labels", mutation: () => ({ active: true }) },
                   ];
                 },
                 onMouseOut: () => {
                   return [
-                    { target: 'data', mutation: () => {} },
-                    { target: 'labels', mutation: () => ({ active: false }) },
+                    { target: "data", mutation: () => {} },
+                    { target: "labels", mutation: () => ({ active: false }) },
                   ];
                 },
               },
@@ -197,23 +197,23 @@ class Timegraph extends Component {
   }
 
   getStyles() {
-    const MED_GREY = '#999';
+    const MED_GREY = "#999";
     // const LIGHT_GREY = "#f0f0f0";
-    const WHITE = '#fff';
-    const GREEN = 'rgb(51, 200, 194)'; //"#009f29";
-    const LIGHT_GREEN = 'rgb(51, 200, 194)'; //"#009f2994";
-    const ORANGE = '#ff7400';
+    const WHITE = "#fff";
+    const GREEN = "rgb(51, 200, 194)"; //"#009f29";
+    const LIGHT_GREEN = "rgb(51, 200, 194)"; //"#009f2994";
+    const ORANGE = "#ff7400";
 
     return {
       container: {
-        maxWidth: '660px',
-        width: '100%',
-        padding: '10px',
-        margin: '1rem auto',
+        maxWidth: "660px",
+        width: "100%",
+        padding: "10px",
+        margin: "1rem auto",
       },
       hourLine: {
         data: { stroke: GREEN },
-        parent: { border: '1px solid #ccc' },
+        parent: { border: "1px solid #ccc" },
       },
       scatter: {
         data: { fill: GREEN, opacity: 0.3 },
@@ -235,21 +235,21 @@ class Timegraph extends Component {
       },
       tooltipText: {
         fill: MED_GREY,
-        fontFamily: 'inherit',
+        fontFamily: "inherit",
         fontSize: 12,
       },
       yAxisLabel: {
         fill: MED_GREY,
-        fontFamily: 'inherit',
+        fontFamily: "inherit",
         fontSize: 10,
-        fontStyle: 'italic',
+        fontStyle: "italic",
       },
       quotaLabel: {
         fill: LIGHT_GREEN,
-        fontFamily: 'inherit',
+        fontFamily: "inherit",
         fontSize: 10,
-        fontStyle: 'italic',
-        textAnchor: 'end',
+        fontStyle: "italic",
+        textAnchor: "end",
       },
       axisYears: {
         axis: { stroke: MED_GREY, strokeWidth: 1 },
@@ -263,20 +263,20 @@ class Timegraph extends Component {
         },
         tickLabels: {
           fill: MED_GREY,
-          fontFamily: 'inherit',
+          fontFamily: "inherit",
           fontSize: 12,
         },
       },
       yAxis: {
         grid: {
-          stroke: (tick) => (tick < 1 ? 'transparent' : WHITE),
+          stroke: (tick) => (tick < 1 ? "transparent" : WHITE),
           strokeWidth: 2,
         },
         axis: { stroke: MED_GREY, strokeWidth: 0 },
         ticks: { strokeWidth: 0 },
         tickLabels: {
           fill: MED_GREY,
-          fontFamily: 'inherit',
+          fontFamily: "inherit",
           fontSize: 12,
         },
       },

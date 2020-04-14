@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   VictoryAxis,
   VictoryChart,
   VictoryTooltip,
   VictoryBar,
   VictoryTheme,
-} from 'victory';
-import { turnaround as dummyData } from '../lib/sampleData';
+} from "victory";
+import { turnaround as dummyData } from "../lib/sampleData";
 
 const buildHistogram = (data, key, steps) => {
   const min = data.reduce(
@@ -60,7 +60,7 @@ class Histogram extends Component {
     ];
 
     return (
-      <div style={{ maxWidth: 400, width: '100%' }}>
+      <div style={{ maxWidth: 400, width: "100%" }}>
         <VictoryChart
           theme={VictoryTheme.material}
           domain={{ x: xDomain }}
@@ -73,7 +73,7 @@ class Histogram extends Component {
           <VictoryBar
             barRatio={0.9}
             alignment="middle"
-            style={{ data: { fill: 'tomato' } }}
+            style={{ data: { fill: "tomato" } }}
             data={this.state.data}
             labelComponent={<VictoryTooltip />}
           />
@@ -86,7 +86,7 @@ class Histogram extends Component {
 Histogram.defaultProps = {
   steps: 10,
   data: dummyData,
-  key: 'turnaround',
+  key: "turnaround",
 };
 
 export default Histogram;
