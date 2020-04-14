@@ -1,14 +1,14 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 const Menu = (_) => (
   <nav
     style={{
-      padding: ".85rem 1.5rem",
-      boxShadow: "0 1px 1px rgba(0,0,0,.15)",
-      backgroundColor: "#fff",
-      display: "flex",
-      alignItems: "center",
+      padding: '.85rem 1.5rem',
+      boxShadow: '0 1px 1px rgba(0,0,0,.15)',
+      backgroundColor: '#fff',
+      display: 'flex',
+      alignItems: 'center',
     }}
   >
     {/* <NavLink activeClassName="active" to="/material-requests">
