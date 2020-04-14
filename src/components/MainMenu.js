@@ -26,7 +26,7 @@ const Menu = (_) => (
     <NavLink activeClassName="active" to="/employees">
       Employees
     </NavLink> */}
-    <NavLink activeClassName="active" to="/ridge/projections">
+    <NavLink activeClassName="active" to="/projections">
       Projections
     </NavLink>
   </nav>
