@@ -75,7 +75,7 @@ const SectionScore = ({ section }) => {
       <div>
         <h4>{nonSkillType.type}</h4>
         <p>
-          This section tested had {nonSkillType.results.length} main{" "}
+          This section had {nonSkillType.results.length} main{" "}
           {nonSkillType.type.toLowerCase()}s.
         </p>
         <p>
