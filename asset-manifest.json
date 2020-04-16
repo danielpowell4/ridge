@@ -1,13 +1,13 @@
 {
   "main.css": "/ridge/static/css/main.5216ebf8.chunk.css",
-  "main.js": "/ridge/static/js/main.d555952a.chunk.js",
-  "main.js.map": "/ridge/static/js/main.d555952a.chunk.js.map",
+  "main.js": "/ridge/static/js/main.3d4a7d9d.chunk.js",
+  "main.js.map": "/ridge/static/js/main.3d4a7d9d.chunk.js.map",
   "runtime~main.js": "/ridge/static/js/runtime~main.10b47215.js",
   "runtime~main.js.map": "/ridge/static/js/runtime~main.10b47215.js.map",
   "static/js/2.09097ed0.chunk.js": "/ridge/static/js/2.09097ed0.chunk.js",
   "static/js/2.09097ed0.chunk.js.map": "/ridge/static/js/2.09097ed0.chunk.js.map",
   "index.html": "/ridge/index.html",
-  "precache-manifest.da14300ca2fc3bb5a84c77c4c082463f.js": "/ridge/precache-manifest.da14300ca2fc3bb5a84c77c4c082463f.js",
+  "precache-manifest.e688055b7ed9d3226659a2749ed9f73b.js": "/ridge/precache-manifest.e688055b7ed9d3226659a2749ed9f73b.js",
   "service-worker.js": "/ridge/service-worker.js",
   "static/css/main.5216ebf8.chunk.css.map": "/ridge/static/css/main.5216ebf8.chunk.css.map"
 }
