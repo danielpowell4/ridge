@@ -70,8 +70,6 @@ const SectionScore = ({ section }) => {
         </table>
       </details>
 
-      <hr />
-
       <h3>Section Report</h3>
 
       <div>
@@ -227,8 +225,6 @@ const SectionScore = ({ section }) => {
           )}
       </div>
 
-      <hr />
-
       <h3>Answer Key</h3>
       <details style={{ marginBottom: `1rem` }}>
         <summary>View All Answers</summary>
@@ -272,6 +268,11 @@ const ScoreReport = () => {
   return (
     <div style={{ maxWidth: 880, margin: `auto` }}>
       <h1>Sample ACT Score Report</h1>
+      <small>
+        Note: at this point in development, we are <em>almost</em> done with the composite scoring.
+        <br/>
+        As such you will notice it is current missing both here at the top and for each section next to 'Score.'
+      </small>
       {sectionData.map((section, sectionIndex) => (
         <SectionScore key={sectionIndex} section={section} />
       ))}
