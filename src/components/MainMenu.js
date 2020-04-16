@@ -29,6 +29,9 @@ const Menu = (_) => (
     <NavLink activeClassName="active" to="/projections">
       Projections
     </NavLink>
+    <NavLink activeClassName="active" to="/score-report">
+      Score Report
+    </NavLink>
   </nav>
 );
 
