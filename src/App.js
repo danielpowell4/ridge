@@ -10,7 +10,9 @@ import {
   MaterialRequests,
   Referrals,
   SummaryTurnaround,
+
   Projections,
+  ScoreReport,
 } from "./components";
 
 import "./App.css";
@@ -30,7 +32,9 @@ const App = (_) => (
         <Route path={`/lesson-turnaround`} component={SummaryTurnaround} />
         <Route path={`/material-requests`} component={MaterialRequests} />
         <Route path={`/referrals`} component={Referrals} />
+
         <Route path={`/projections`} component={Projections} />
+        <Route path={`/score-report`} component={ScoreReport} />
         <Route exact path="/" component={Projections} />
       </main>
     </div>
