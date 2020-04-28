@@ -213,8 +213,8 @@ const BarTime = ({
         dataComponent={<RankedBar fullRange={fullRange} />}
         labelComponent={
           <VictoryTooltip
-            orientation="right"
-            dy={(d) => -(d.y / 2) - 6.5}
+            orientation="top"
+            dy={(d) => d.y}
             dx={2}
             cornerRadius={0}
             flyoutStyle={{ fill: "white" }}
