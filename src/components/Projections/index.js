@@ -76,7 +76,6 @@ const Filters = ({ filters }) => (
   <ul
     style={{
       display: `grid`,
-      gridTemplateColumns: `repeat(3, 1fr)`,
       gridGap: `1rem`,
       maxWidth: 600,
       margin: `auto`,
@@ -85,7 +84,13 @@ const Filters = ({ filters }) => (
   >
     {filters.map((filter) => (
       <li key={filter.label}>
-        <strong>{filter.label}</strong>
+        <span>
+          <strong>{filter.label}</strong>
+          {!!filter.onSelectAll && (
+            <button onClick={filter.onSelectAll}>Select All</button>
+          )}
+        </span>
+
         {filter.type === `Select` ? (
           <Select
             options={filter.options}
@@ -100,12 +105,13 @@ const Filters = ({ filters }) => (
           />
         ) : filter.type === `checkboxGroup` ? (
           <div
-            style={{ display: `grid`, gridTemplateColumns: `repeat(3, 1fr)` }}
+            style={{ display: `grid`, gridTemplateColumns: `repeat(2, 1fr)` }}
           >
             {filter.options.map((opt) => (
               <label key={opt.value} htmlFor={opt.value}>
                 <input
                   type="checkbox"
+                  id={opt.value}
                   value={opt.value}
                   checked={
                     !!filter.selected.find(
@@ -235,14 +241,14 @@ const BarTime = ({
 
 const Projections = () => {
   const [markets, setMarkets] = useState([]);
-  const [category, setCategory] = useState();
+  const [categories, setCategories] = useState([]);
   const [dimension, setDimension] = useState();
   const [segmentStart, setSegmentStart] = useState("2018-08-01");
   const [segmentEnd, setSegmentEnd] = useState("2018-12-01");
 
   const filters = [
     {
-      label: `Market`,
+      label: `Markets`,
       options: marketOptions,
       selected: markets,
       onChange: (e) => {
@@ -261,14 +267,37 @@ const Projections = () => {
           }
         });
       },
+      onSelectAll: () =>
+        setMarkets((prev) =>
+          prev.length === marketOptions.length ? [] : marketOptions
+        ),
       type: `checkboxGroup`,
     },
     {
       label: `Subject Category`,
       options: categoryOptions,
-      selected: categoryOptions.filter((opt) => opt.value === category),
-      onChange: (selected) => setCategory(selected.value),
-      type: `Select`,
+      selected: categories,
+      onChange: (e) => {
+        const value = e.target.value;
+        const isChecked = e.target.checked || false;
+
+        // add if checked else remove
+        setCategories((prevSelected) => {
+          if (isChecked) {
+            return [
+              ...prevSelected,
+              categoryOptions.find((opt) => opt.value === value),
+            ];
+          } else {
+            return prevSelected.filter((opt) => opt.value !== value);
+          }
+        });
+      },
+      onSelectAll: () =>
+        setCategories((prev) =>
+          prev.length === categoryOptions.length ? [] : categoryOptions
+        ),
+      type: `checkboxGroup`,
     },
     {
       label: `Dimension`,
@@ -293,16 +322,18 @@ const Projections = () => {
 
   let activeData = [];
 
-  if (!!markets.length && !!category && !!dimension) {
+  if (!!markets.length && !!categories.length && !!dimension) {
     let weeklyTotals = {};
 
     for (let market of markets) {
       for (let marketWeek of market.weeks) {
-        let val = marketWeek[category][dimension];
-        let weekStart = marketWeek.start_date;
+        for (let categoryOpt of categories) {
+          let val = marketWeek[categoryOpt.value][dimension];
+          let weekStart = marketWeek.start_date;
 
-        let prevTotal = weeklyTotals[weekStart] || 0;
-        weeklyTotals[weekStart] = prevTotal + val;
+          let prevTotal = weeklyTotals[weekStart] || 0;
+          weeklyTotals[weekStart] = prevTotal + val;
+        }
       }
     }
 
@@ -318,9 +349,24 @@ const Projections = () => {
     });
   }
 
-  let marketName = "";
+  let marketLabel = "";
+  let categoryLabel = "";
   if (activeData.length) {
-    marketName = markets.map((m) => m.label).join(", ");
+    if (markets.length == marketOptions.length) {
+      marketLabel = `all markets`;
+    } else if (markets.length > 3) {
+      marketLabel = `${markets.length} markets`;
+    } else {
+      marketLabel = markets.map((m) => m.label).join(", ");
+    }
+
+    if (categories.length == categoryOptions.length) {
+      categoryLabel = `all categories`;
+    } else if (categories.length > 3) {
+      categoryLabel = `${categories.length} categories`;
+    } else {
+      categoryLabel = categories.map((c) => c.label).join(", ");
+    }
   }
 
   const fullRange = activeData.map((d) => d.y);
@@ -387,7 +433,7 @@ const Projections = () => {
                 margin: `auto`,
               }}
             >
-              <h1>{`${category} ${dimension} in ${marketName}`}</h1>
+              <h1>{`${dimension} for ${categoryLabel} in ${marketLabel}`}</h1>
               <BarTime dataset={activeData} width={800} height={300} />
               <aside
                 style={{
@@ -431,8 +477,8 @@ const Projections = () => {
                 />
               </div>
               <h2 style={{ textAlign: `center` }}>
-                {`${category} ${dimension} in ${marketName}`} | Simple Stat
-                Breakdown
+                {`${dimension} for ${categoryLabel} in ${marketLabel}`} | Simple
+                Stat Breakdown
               </h2>
               <table>
                 <thead>
