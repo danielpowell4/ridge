@@ -21,7 +21,8 @@ const SectionScore = ({ section }) => {
   const nonSkillType = report.tags.find((t) => t.type !== "Skill Tested");
   const bestType = nonSkillType.results.sort(sortTagResults)[0];
 
-  const skillResults = report.tags.find((t) => t.type === "Skill Tested")
+  const skillResults = report.tags
+    .find((t) => t.type === "Skill Tested")
     .results.sort(sortTagResults);
   const acedSkills = skillResults.filter((r) => r.correct === r.available);
   const strongSkills = skillResults.filter(
@@ -136,8 +137,8 @@ const SectionScore = ({ section }) => {
             correct.
           </p>
         ) : (
-                ""
-              )}
+          ""
+        )}
 
         {strongSkills.length > 2 ? (
           <p>
@@ -156,31 +157,31 @@ const SectionScore = ({ section }) => {
             or more correct.
           </p>
         ) : (
-                ""
-              )}
+          ""
+        )}
 
         {growthOpportunities.length > 2 ? (
           <p>
-            We indentify that you can improve most on{" "}
+            We identify that you can improve most on{" "}
             {growthOpportunities.length} skills like{" "}
             {growthOpportunities[0].name}, {growthOpportunities[1].name}, and{" "}
             {growthOpportunities[2].name} where you got less than 80% correct.
           </p>
         ) : growthOpportunities.length === 2 ? (
           <p>
-            We indentify that you have an opportunity to developing stills
+            We identify that you have an opportunity to developing skills
             related to {growthOpportunities[0].name} and{" "}
             {growthOpportunities[1].name} where you got less than 80% correct.
           </p>
         ) : growthOpportunities.length === 1 ? (
           <p>
-            We indentify that you have an opportunity to developing stills
+            We identify that you have an opportunity to developing skills
             related to {growthOpportunities[0].name} where you got less than 80%
             correct.
           </p>
         ) : (
-                ""
-              )}
+          ""
+        )}
 
         <details style={{ marginBottom: `1rem` }}>
           <summary>View Breakdown</summary>
@@ -219,10 +220,10 @@ const SectionScore = ({ section }) => {
             practice pacing.
           </p>
         ) : (
-            <p>
-              You were able to answer all questions for this section. Great work!
-            </p>
-          )}
+          <p>
+            You were able to answer all questions for this section. Great work!
+          </p>
+        )}
       </div>
 
       <h3>Answer Key</h3>
@@ -269,9 +270,11 @@ const ScoreReport = () => {
     <div style={{ maxWidth: 880, margin: `auto` }}>
       <h1>Sample ACT Score Report</h1>
       <small>
-        Note: at this point in development, we are <em>almost</em> done with the scaled scoring.
-        <br/>
-        As such you will notice it is current missing both here at the top and for each section next to 'Score.'
+        Note: at this point in development, we are <em>almost</em> done with the
+        scaled scoring.
+        <br />
+        As such you will notice it is current missing both here at the top and
+        for each section next to 'Score.'
       </small>
       {sectionData.map((section, sectionIndex) => (
         <SectionScore key={sectionIndex} section={section} />
