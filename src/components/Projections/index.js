@@ -98,6 +98,26 @@ const Filters = ({ filters }) => (
             value={filter.selected}
             onChange={filter.onChange}
           />
+        ) : filter.type === `checkboxGroup` ? (
+          <div
+            style={{ display: `grid`, gridTemplateColumns: `repeat(3, 1fr)` }}
+          >
+            {filter.options.map((opt) => (
+              <label key={opt.value} htmlFor={opt.value}>
+                <input
+                  type="checkbox"
+                  value={opt.value}
+                  checked={
+                    !!filter.selected.find(
+                      (selected) => selected.value === opt.value
+                    )
+                  }
+                  onChange={filter.onChange}
+                />
+                {opt.label}
+              </label>
+            ))}
+          </div>
         ) : (
           <p style={{ color: `red` }}>Unsupported filter type</p>
         )}
@@ -214,7 +234,7 @@ const BarTime = ({
 // actual component
 
 const Projections = () => {
-  const [market, setMarket] = useState();
+  const [markets, setMarkets] = useState([]);
   const [category, setCategory] = useState();
   const [dimension, setDimension] = useState();
   const [segmentStart, setSegmentStart] = useState("2018-08-01");
@@ -224,9 +244,24 @@ const Projections = () => {
     {
       label: `Market`,
       options: marketOptions,
-      selected: market,
-      onChange: setMarket,
-      type: `Select`,
+      selected: markets,
+      onChange: (e) => {
+        const value = e.target.value;
+        const isChecked = e.target.checked || false;
+
+        // add if checked else remove
+        setMarkets((prevSelected) => {
+          if (isChecked) {
+            return [
+              ...prevSelected,
+              marketOptions.find((opt) => opt.value === value),
+            ];
+          } else {
+            return prevSelected.filter((opt) => opt.value !== value);
+          }
+        });
+      },
+      type: `checkboxGroup`,
     },
     {
       label: `Subject Category`,
@@ -256,20 +291,37 @@ const Projections = () => {
     },
   ];
 
-  const activeData =
-    !market || !category || !dimension
-      ? []
-      : market.weeks.map((weekData) => {
-          let val = weekData[category][dimension];
+  let activeData = [];
 
-          return {
-            x: new Date(weekData.start_date),
-            y: val,
-            label: `${val} ${dimension} | Week of ${moment(
-              weekData.start_date
-            ).format("L")}`,
-          };
-        });
+  if (!!markets.length && !!category && !!dimension) {
+    let weeklyTotals = {};
+
+    for (let market of markets) {
+      for (let marketWeek of market.weeks) {
+        let val = marketWeek[category][dimension];
+        let weekStart = marketWeek.start_date;
+
+        let prevTotal = weeklyTotals[weekStart] || 0;
+        weeklyTotals[weekStart] = prevTotal + val;
+      }
+    }
+
+    activeData = Object.keys(weeklyTotals).map((weekStart) => {
+      const total = weeklyTotals[weekStart];
+      return {
+        x: new Date(weekStart),
+        y: total,
+        label: `${total} ${dimension} | Week of ${moment(weekStart).format(
+          "L"
+        )}`,
+      };
+    });
+  }
+
+  let marketName = "";
+  if (activeData.length) {
+    marketName = markets.map((m) => m.label).join(", ");
+  }
 
   const fullRange = activeData.map((d) => d.y);
   const segmentOneStart = moment(segmentStart);
@@ -335,7 +387,7 @@ const Projections = () => {
                 margin: `auto`,
               }}
             >
-              <h1>{`${category} ${dimension} in ${market.name}`}</h1>
+              <h1>{`${category} ${dimension} in ${marketName}`}</h1>
               <BarTime dataset={activeData} width={800} height={300} />
               <aside
                 style={{
@@ -379,7 +431,7 @@ const Projections = () => {
                 />
               </div>
               <h2 style={{ textAlign: `center` }}>
-                {`${category} ${dimension} in ${market.name}`} | Simple Stat
+                {`${category} ${dimension} in ${marketName}`} | Simple Stat
                 Breakdown
               </h2>
               <table>
