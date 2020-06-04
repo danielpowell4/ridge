@@ -21,7 +21,7 @@ import {
   max,
 } from "simple-statistics";
 
-import allData from "./2020_april_by_market_by_category_with_grades.json";
+import allData from "./2020_june_new_business_by_market.json";
 
 // setup options
 const marketOptions = allData.map((marketGroup) => ({
@@ -30,43 +30,16 @@ const marketOptions = allData.map((marketGroup) => ({
   ...marketGroup,
 }));
 const categoryOptions = [
-  "Admissions Consulting",
-  "College Academics",
-  "College Transitions Program",
-  "English",
-  "Executive Functioning",
-  "Foreign Language",
-  "Graduate Level Tests",
-  "History and Social Sciences",
-  "Math",
-  "Multi-Subject Support",
-  "Other",
-  "SAT/ACT Prep",
-  "Science",
-  "SSAP Prep",
+  "consultations",
+  "projects_added",
+  "clients_added",
+  "clients_activated",
+  "website_leads",
+  "non_website_referrals",
 ].map((cat) => ({ value: cat, label: cat }));
 
 const dimensionOptions = [
-  "hours",
-  "coaches",
-  "all_students",
-  "High School Senior",
-  "High School Junior",
-  "High School Sophomore",
-  "High School Freshman",
-  "College Senior",
-  "College Junior",
-  "College Sophomore",
-  "College Freshman",
-  "Grade 1",
-  "Grade 2",
-  "Grade 3",
-  "Grade 4",
-  "Grade 5",
-  "Grade 6",
-  "Grade 7",
-  "Grade 8",
-  "Kindergarten",
+  "all grades",
 ].map((dim) => ({
   value: dim,
   label: dim,
@@ -274,7 +247,7 @@ const Projections = () => {
       type: `checkboxGroup`,
     },
     {
-      label: `Subject Category`,
+      label: `Category`,
       options: categoryOptions,
       selected: categories,
       onChange: (e) => {
@@ -352,7 +325,7 @@ const Projections = () => {
   let marketLabel = "";
   let categoryLabel = "";
   if (activeData.length) {
-    if (markets.length == marketOptions.length) {
+    if (markets.length === marketOptions.length) {
       marketLabel = `all markets`;
     } else if (markets.length > 3) {
       marketLabel = `${markets.length} markets`;
@@ -360,7 +333,7 @@ const Projections = () => {
       marketLabel = markets.map((m) => m.label).join(", ");
     }
 
-    if (categories.length == categoryOptions.length) {
+    if (categories.length === categoryOptions.length) {
       categoryLabel = `all categories`;
     } else if (categories.length > 3) {
       categoryLabel = `${categories.length} categories`;
