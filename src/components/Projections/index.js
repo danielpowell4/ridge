@@ -187,8 +187,6 @@ const BarTime = ({
         labelComponent={
           <VictoryTooltip
             orientation="top"
-            dy={(d) => d.y}
-            dx={2}
             cornerRadius={0}
             flyoutStyle={{ fill: "white" }}
           />
@@ -215,9 +213,9 @@ const BarTime = ({
 const Projections = () => {
   const [markets, setMarkets] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [dimension, setDimension] = useState();
-  const [segmentStart, setSegmentStart] = useState("2018-08-01");
-  const [segmentEnd, setSegmentEnd] = useState("2018-12-01");
+  const [dimension, setDimension] = useState("all grades");
+  const [segmentStart, setSegmentStart] = useState("2019-05-01");
+  const [segmentEnd, setSegmentEnd] = useState("2019-06-01");
 
   const filters = [
     {
@@ -315,9 +313,9 @@ const Projections = () => {
       return {
         x: new Date(weekStart),
         y: total,
-        label: `${total} ${dimension} | Week of ${moment(weekStart).format(
+        label: [`Week of ${moment(weekStart).format(
           "L"
-        )}`,
+        )}`, `${total} ${dimension}`],
       };
     });
   }
