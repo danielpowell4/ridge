@@ -21,7 +21,7 @@ import {
   max,
 } from "simple-statistics";
 
-import allData from "./2020_june_new_business_by_market.json";
+import allData from "./2020_ef_breakdown.json";
 
 // setup options
 const marketOptions = allData.map((marketGroup) => ({
@@ -30,16 +30,25 @@ const marketOptions = allData.map((marketGroup) => ({
   ...marketGroup,
 }));
 const categoryOptions = [
-  "consultations",
-  "projects_added",
-  "clients_added",
-  "clients_activated",
-  "website_leads",
-  "non_website_referrals",
+  'Academic Skills',
+  'Executive Functioning',
+  'Productivity Focus',
+  'College Transitions Program'
 ].map((cat) => ({ value: cat, label: cat }));
 
 const dimensionOptions = [
-  "all grades",
+  "all_hours",
+  "all_rev",
+  "all_project_count",
+  "all_coach_count",
+  "ef_project_hours",
+  "ef_project_rev",
+  "ef_project_count",
+  "ef_project_coach_count",
+  "other_project_hours",
+  "other_project_rev",
+  "other_project_count",
+  "other_project_coach_count",
 ].map((dim) => ({
   value: dim,
   label: dim,
@@ -213,8 +222,8 @@ const BarTime = ({
 const Projections = () => {
   const [markets, setMarkets] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [dimension, setDimension] = useState("all grades");
-  const [segmentStart, setSegmentStart] = useState("2019-05-01");
+  const [dimension, setDimension] = useState();
+  const [segmentStart, setSegmentStart] = useState("2018-07-01");
   const [segmentEnd, setSegmentEnd] = useState("2019-06-01");
 
   const filters = [
