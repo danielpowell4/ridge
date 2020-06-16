@@ -19,6 +19,7 @@ import {
   mode,
   min,
   max,
+  sum
 } from "simple-statistics";
 
 import allData from "./2020_ef_breakdown.json";
@@ -483,6 +484,7 @@ const Projections = () => {
                     <td></td>
                   </tr>
                   {[
+                    ["Sum", sum],
                     ["Max", max],
                     ["Mean", mean],
                     ["Median", median],
