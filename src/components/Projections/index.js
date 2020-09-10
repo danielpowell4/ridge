@@ -19,10 +19,10 @@ import {
   mode,
   min,
   max,
-  sum
+  sum,
 } from "simple-statistics";
 
-import allData from "./2020_ef_breakdown.json";
+import allData from "./2020_fall_ef_breakdown.json";
 
 // setup options
 const marketOptions = allData.map((marketGroup) => ({
@@ -31,10 +31,10 @@ const marketOptions = allData.map((marketGroup) => ({
   ...marketGroup,
 }));
 const categoryOptions = [
-  'Academic Skills',
-  'Executive Functioning',
-  'Productivity Focus',
-  'College Transitions Program'
+  "Academic Skills",
+  "Executive Functioning",
+  "Productivity Focus",
+  "College Transitions Program",
 ].map((cat) => ({ value: cat, label: cat }));
 
 const dimensionOptions = [
@@ -323,9 +323,10 @@ const Projections = () => {
       return {
         x: new Date(weekStart),
         y: total,
-        label: [`Week of ${moment(weekStart).format(
-          "L"
-        )}`, `${total} ${dimension}`],
+        label: [
+          `Week of ${moment(weekStart).format("L")}`,
+          `${total} ${dimension}`,
+        ],
       };
     });
   }
