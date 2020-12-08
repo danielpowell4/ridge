@@ -22,7 +22,7 @@ import {
   sum,
 } from "simple-statistics";
 
-import allData from "./2020_fall_ef_breakdown.json";
+import allData from "./2020_winter_ef_breakdown.json";
 
 // setup options
 const marketOptions = allData.map((marketGroup) => ({
