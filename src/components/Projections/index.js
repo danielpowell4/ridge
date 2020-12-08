@@ -22,6 +22,7 @@ import {
   sum,
 } from "simple-statistics";
 
+// from dashboard-reports lessons/EF_breakdown_by_subject_and_project_type.rb
 import allData from "./2020_winter_ef_breakdown.json";
 
 // setup options
