@@ -270,11 +270,9 @@ const ScoreReport = () => {
     <div style={{ maxWidth: 880, margin: `auto` }}>
       <h1>Sample ACT Score Report</h1>
       <small>
-        Note: at this point in development, we are <em>almost</em> done with the
-        scaled scoring.
+        Note: this was the draft score report <em>before</em> we were done with the scaled scoring.
         <br />
-        As such you will notice it is current missing both here at the top and
-        for each section next to 'Score.'
+        lolol
       </small>
       {sectionData.map((section, sectionIndex) => (
         <SectionScore key={sectionIndex} section={section} />

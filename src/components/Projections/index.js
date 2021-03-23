@@ -22,8 +22,8 @@ import {
   sum,
 } from "simple-statistics";
 
-// from dashboard-reports lessons/EF_breakdown_by_subject_and_project_type.rb
-import allData from "./2020_winter_ef_breakdown.json";
+// from dashboard-reports markets/recruitment/lesson_category_by_week_by_market.rb
+import allData from "./2021_march_by_market_by_category_with_grades_location.json";
 
 // setup options
 const marketOptions = allData.map((marketGroup) => ({
@@ -32,29 +32,47 @@ const marketOptions = allData.map((marketGroup) => ({
   ...marketGroup,
 }));
 const categoryOptions = [
-  "Academic Skills",
-  "Executive Functioning",
-  "Productivity Focus",
+  "Admissions Consulting",
+  "College Academics",
   "College Transitions Program",
+  "English",
+  "Executive Functioning",
+  "Foreign Language",
+  "Graduate Level Tests",
+  "History and Social Sciences",
+  "Math",
+  "Multi-Subject Support",
+  "Other",
+  "SAT/ACT Prep",
+  "Science",
+  "SSAP Prep"
 ].map((cat) => ({ value: cat, label: cat }));
 
 const dimensionOptions = [
-  "all_hours",
-  "all_rev",
-  "all_project_count",
-  "all_coach_count",
-  "ef_project_hours",
-  "ef_project_rev",
-  "ef_project_count",
-  "ef_project_coach_count",
-  "other_project_hours",
-  "other_project_rev",
-  "other_project_count",
-  "other_project_coach_count",
-].map((dim) => ({
-  value: dim,
-  label: dim,
-}));
+  { value: "hours", label: "Total hours", },
+  { value: "at_client_hours", label: "At Client Hours", },
+  { value: "pp_office_hours", label: "PP Office Hours", },
+  { value: "online_hours", label: "Online Hours", },
+  { value: "coaches", label: "Coaches", },
+  { value: "all_students", label: "All students", },
+  { value: "High School Senior", label: "High School Senior", },
+  { value: "High School Junior", label: "High School Junior", },
+  { value: "High School Sophomore", label: "High School Sophomore", },
+  { value: "High School Freshman", label: "High School Freshman", },
+  { value: "College Senior", label: "College Senior", },
+  { value: "College Junior", label: "College Junior", },
+  { value: "College Sophomore", label: "College Sophomore", },
+  { value: "College Freshman", label: "College Freshman", },
+  { value: "Grade 1", label: "Grade 1", },
+  { value: "Grade 2", label: "Grade 2", },
+  { value: "Grade 3", label: "Grade 3", },
+  { value: "Grade 4", label: "Grade 4", },
+  { value: "Grade 5", label: "Grade 5", },
+  { value: "Grade 6", label: "Grade 6", },
+  { value: "Grade 7", label: "Grade 7", },
+  { value: "Grade 8", label: "Grade 8", },
+  { value: "Kindergarten", label: "Kindergarten", },
+];
 
 const Filters = ({ filters }) => (
   <ul
@@ -163,7 +181,7 @@ const ColorLabel = ({ dataset, colorRange }) => {
           backgroundColor: fill,
         }}
       />
-      <p style={{ margin: 0 }}>{start}+</p>
+      <p style={{ margin: 0 }}>{start.toFixed(2)}+</p>
     </div>
   ));
 };
@@ -225,8 +243,8 @@ const Projections = () => {
   const [markets, setMarkets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [dimension, setDimension] = useState();
-  const [segmentStart, setSegmentStart] = useState("2018-07-01");
-  const [segmentEnd, setSegmentEnd] = useState("2019-06-01");
+  const [segmentStart, setSegmentStart] = useState("2019-07-01");
+  const [segmentEnd, setSegmentEnd] = useState("2020-02-28");
 
   const filters = [
     {
@@ -326,7 +344,7 @@ const Projections = () => {
         y: total,
         label: [
           `Week of ${moment(weekStart).format("L")}`,
-          `${total} ${dimension}`,
+          `${total.toFixed(2)} ${dimension}`,
         ],
       };
     });
