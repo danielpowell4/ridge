@@ -8,7 +8,7 @@ import Filters from "./Filters";
 import { mean, median, mode, min, max, sum } from "simple-statistics";
 
 // from dashboard-reports markets/recruitment/lesson_category_by_week_by_market.rb
-import allData from "./2021_march_by_market_by_category_with_grades_location.json";
+import lessonHourData from "./data/2021_march_lessons_by_market_by_category_with_grades_location.json";
 
 // expected data shape
 // [
@@ -24,76 +24,65 @@ import allData from "./2021_march_by_market_by_category_with_grades_location.jso
 //   }
 // ]
 
-// setup options
-const marketOptions = allData.map((marketGroup) => ({
-  value: marketGroup.name,
-  label: marketGroup.name,
-  ...marketGroup,
-}));
+// note that categoryKeys + dimensionKeys == '__all' assumes first week + option has everything!
+// except ignored keys of 'start_date' for categoryKeys and '__uniqXXX' for dimensionKeys
 
-const categoryOptions = [
-  "Admissions Consulting",
-  "College Academics",
-  "College Transitions Program",
-  "English",
-  "Executive Functioning",
-  "Foreign Language",
-  "Graduate Level Tests",
-  "History and Social Sciences",
-  "Math",
-  "Multi-Subject Support",
-  "Other",
-  "SAT/ACT Prep",
-  "Science",
-  "SSAP Prep",
-].map((cat) => ({ value: cat, label: cat }));
+const buildCategoryOptions = (data, categoryKeys) => {
+  if (categoryKeys === "__all") {
+    return Object.keys(data[0].weeks[0])
+      .filter((key) => key !== "start_date")
+      .map((catValue) => ({
+        value: catValue,
+        label: titleize(catValue),
+      }));
+  }
 
-const dimensionOptions = [
-  "hours",
-  "at_client_hours",
-  "pp_office_hours",
-  "online_hours",
-  "coaches",
-  "all_students",
-  "High School Senior",
-  "High School Junior",
-  "High School Sophomore",
-  "High School Freshman",
-  "College Senior",
-  "College Junior",
-  "College Sophomore",
-  "College Freshman",
-  "Grade 1",
-  "Grade 2",
-  "Grade 3",
-  "Grade 4",
-  "Grade 5",
-  "Grade 6",
-  "Grade 7",
-  "Grade 8",
-  "Kindergarten",
-].map((dimension) => ({ value: dimension, label: titleize(dimension) }));
+  return categoryKeys.map((catValue) => ({
+    value: catValue,
+    label: titleize(catValue),
+  }));
+};
 
-// actual component
+const buildDimensionOptions = (data, dimensionKeys, categoryOptions) => {
+  if (dimensionKeys === "__all") {
+    const assumedCategory = categoryOptions[0].value;
+    return Object.keys(data[0].weeks[0][assumedCategory])
+      .filter((key) => key.indexOf("__uniq") !== 0)
+      .map((dimVal) => ({
+        value: dimVal,
+        label: titleize(dimVal),
+      }));
+  }
 
-const Projections = () => {
-  const [markets, setMarkets] = useState([]);
+  return dimensionKeys.map((dimVal) => ({
+    value: dimVal,
+    label: titleize(dimVal),
+  }));
+};
+
+const Projections = ({ data = lessonHourData, categoryKeys = "__all", dimensionKeys = "__all" }) => {
+  const [selectedMarkets, setSelectedMarkets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [dimension, setDimension] = useState();
   const [segmentStart, setSegmentStart] = useState("2019-07-01");
   const [segmentEnd, setSegmentEnd] = useState("2020-02-28");
 
+  // build options
+const marketOptions = data.map((d) => ({ value: d.name, label: d.name }));
+const categoryOptions = buildCategoryOptions(data, categoryKeys);
+const dimensionOptions = buildDimensionOptions(data, dimensionKeys, categoryOptions)
+
   const filters = [
     {
       label: `Markets`,
       options: marketOptions,
-      selected: markets,
+      selected: selectedMarkets,
       onChange: (e) => {
         const value = e.target.value;
         const isChecked = e.target.checked || false;
 
         // add if checked else remove
-        setMarkets((prevSelected) => {
+        setSelectedMarkets((prevSelected) => {
           if (isChecked) {
             return [
               ...prevSelected,
@@ -105,7 +94,7 @@ const Projections = () => {
         });
       },
       onSelectAll: () =>
-        setMarkets((prev) =>
+        setSelectedMarkets((prev) =>
           prev.length === marketOptions.length ? [] : marketOptions
         ),
       type: `checkboxGroup`,
@@ -158,6 +147,8 @@ const Projections = () => {
   ];
 
   let activeData = [];
+
+  const markets = selectedMarkets.map(marketOption => data.find(marketData => marketData.name === marketOption.value));
 
   if (!!markets.length && !!categories.length && !!dimension) {
     let weeklyTotals = {};
