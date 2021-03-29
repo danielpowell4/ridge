@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import moment from "moment";
-import Select from "react-select";
 import { BarTime, ColorLabel } from "./charts";
+import Filters from "./Filters";
 
 // for stats
 import {
