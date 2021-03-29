@@ -16,6 +16,20 @@ import {
 // from dashboard-reports markets/recruitment/lesson_category_by_week_by_market.rb
 import allData from "./2021_march_by_market_by_category_with_grades_location.json";
 
+// expected data shape
+// [
+//   { name: MARKET_NAME,
+//     weeks: [
+//       {
+//         start_date: "2018-06-25",
+//         CATEGORY_AS_KEY: {
+//           DIMENSION_AS_KEY: 0.75
+//         }
+//       }
+//     ]
+//   }
+// ]
+
 // setup options
 const marketOptions = allData.map((marketGroup) => ({
   value: marketGroup.name,
