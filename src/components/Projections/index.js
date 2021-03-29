@@ -218,19 +218,31 @@ const Projections = () => {
       <div>
         <Filters filters={filters} />
         <hr style={{ maxWidth: 660, margin: `1rem auto` }} />
-        <pre>
-          first segment starts:{" "}
-          {segmentOneStart.isValid()
-            ? segmentOneStart.format("L")
-            : "Not Valid"}
-        </pre>
-        <pre>
-          first segment ends:{" "}
-          {segmentOneEnd.isValid() ? segmentOneEnd.format("L") : "Not Valid"}
-          {segmentOneEnd <= segmentOneStart
-            ? `Must be after segment start`
-            : ``}
-        </pre>
+        <div style={{ maxWidth: 660, margin: `1rem auto` }}>
+          <ul>
+            <li>
+              <strong>First segment starts: </strong>
+              {segmentOneStart.isValid() ? (
+                segmentOneStart.format("L")
+              ) : (
+                <span style={{ color: "red" }}>{`Not Valid (MM/DD/YYYY)`}</span>
+              )}
+            </li>
+            <li>
+              <strong>First segment ends: </strong>
+              {segmentOneEnd.isValid() ? (
+                segmentOneEnd.format("L")
+              ) : (
+                <span style={{ color: "red" }}>{`Not Valid (MM/DD/YYYY)`}</span>
+              )}
+              {segmentOneEnd <= segmentOneStart && (
+                <span
+                  style={{ color: "red" }}
+                >{` Must be after 'First segment starts'`}</span>
+              )}
+            </li>
+          </ul>
+        </div>
       </div>
     );
   }
