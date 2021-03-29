@@ -5,14 +5,7 @@ import { BarTime, ColorLabel } from "./charts";
 import Filters from "./Filters";
 
 // for stats
-import {
-  mean,
-  median,
-  mode,
-  min,
-  max,
-  sum,
-} from "simple-statistics";
+import { mean, median, mode, min, max, sum } from "simple-statistics";
 
 // from dashboard-reports markets/recruitment/lesson_category_by_week_by_market.rb
 import allData from "./2021_march_by_market_by_category_with_grades_location.json";
@@ -37,6 +30,7 @@ const marketOptions = allData.map((marketGroup) => ({
   label: marketGroup.name,
   ...marketGroup,
 }));
+
 const categoryOptions = [
   "Admissions Consulting",
   "College Academics",
@@ -51,34 +45,34 @@ const categoryOptions = [
   "Other",
   "SAT/ACT Prep",
   "Science",
-  "SSAP Prep"
+  "SSAP Prep",
 ].map((cat) => ({ value: cat, label: cat }));
 
 const dimensionOptions = [
-"hours",
-"at_client_hours",
-"pp_office_hours",
-"online_hours",
-"coaches",
-"all_students",
-"High School Senior",
-"High School Junior",
-"High School Sophomore",
-"High School Freshman",
-"College Senior",
-"College Junior",
-"College Sophomore",
-"College Freshman",
-"Grade 1",
-"Grade 2",
-"Grade 3",
-"Grade 4",
-"Grade 5",
-"Grade 6",
-"Grade 7",
-"Grade 8",
-"Kindergarten",
-].map(dimension => ({ value: dimension, label: titleize(dimension)}));
+  "hours",
+  "at_client_hours",
+  "pp_office_hours",
+  "online_hours",
+  "coaches",
+  "all_students",
+  "High School Senior",
+  "High School Junior",
+  "High School Sophomore",
+  "High School Freshman",
+  "College Senior",
+  "College Junior",
+  "College Sophomore",
+  "College Freshman",
+  "Grade 1",
+  "Grade 2",
+  "Grade 3",
+  "Grade 4",
+  "Grade 5",
+  "Grade 6",
+  "Grade 7",
+  "Grade 8",
+  "Kindergarten",
+].map((dimension) => ({ value: dimension, label: titleize(dimension) }));
 
 // actual component
 
@@ -200,7 +194,7 @@ const Projections = () => {
         <hr style={{ maxWidth: 660, margin: `1rem auto` }} />
         <div style={{ textAlign: `center` }}>Select filters</div>
       </div>
-    )
+    );
   }
 
   const fullRange = activeData.map((d) => d.y);
@@ -280,7 +274,9 @@ const Projections = () => {
       categoryLabel = categories.map((c) => c.label).join(", ");
     }
   }
-  const chartTitle = `${titleize(dimension)} for ${categoryLabel} in ${marketLabel}`
+  const chartTitle = `${titleize(
+    dimension
+  )} for ${categoryLabel} in ${marketLabel}`;
 
   return (
     <div>
@@ -346,12 +342,12 @@ const Projections = () => {
             <thead>
               <tr>
                 <th>Stat</th>
-                <th>{`${segmentOneStart.format(
+                <th>{`${segmentOneStart.format("L")} - ${segmentOneEnd.format(
                   "L"
-                )} - ${segmentOneEnd.format("L")}`}</th>
-                <th>{`${segmentTwoStart.format(
+                )}`}</th>
+                <th>{`${segmentTwoStart.format("L")} - ${segmentTwoEnd.format(
                   "L"
-                )} - ${segmentTwoEnd.format("L")}`}</th>
+                )}`}</th>
                 <th>Raw Change</th>
                 <th>% Change</th>
               </tr>
@@ -389,9 +385,7 @@ const Projections = () => {
                     <td>{segOneValue.toFixed(2)}</td>
                     <td>{segTwoValue.toFixed(2)}</td>
                     <td>{delta.toFixed(2)}</td>
-                    <td>{`${((delta / segOneValue) * 100).toFixed(
-                      2
-                    )}%`}</td>
+                    <td>{`${((delta / segOneValue) * 100).toFixed(2)}%`}</td>
                   </tr>
                 );
               })}
