@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Route, Switch, Link } from "react-router-dom";
 import moment from "moment";
 import { titleize } from "./utils";
 import { BarTime, ColorLabel } from "./charts";
@@ -9,6 +10,8 @@ import { mean, median, mode, min, max, sum } from "simple-statistics";
 
 // from dashboard-reports markets/recruitment/lesson_category_by_week_by_market.rb
 import lessonHourData from "./data/2021_march_lessons_by_market_by_category_with_grades_location.json";
+// from dashboard-reports/markets/recruitment/new_business_by_week_by_market.rb
+import newBusinessData from "./data/2021_march_new_business_by_market.json";
 
 // expected data shape
 // [
@@ -26,6 +29,36 @@ import lessonHourData from "./data/2021_march_lessons_by_market_by_category_with
 
 // note that categoryKeys + dimensionKeys == '__all' assumes first week + option has everything!
 // except ignored keys of 'start_date' for categoryKeys and '__uniqXXX' for dimensionKeys
+const datasets = [
+  {
+    label: 'Lessons Hours',
+    route: 'lesson_hours',
+    data: lessonHourData,
+    categoryKeys: "__all",
+    dimensionKeys: "__all",
+  },
+  {
+    label: 'Early Signs',
+    route: 'early_signs',
+    data: newBusinessData,
+    categoryKeys: ["consultations", "projects_added"],
+    dimensionKeys: "__all"
+  },
+  {
+    label: 'New Clients',
+    route: 'new_clients',
+    data: newBusinessData,
+    categoryKeys: ['clients_added', "clients_activated"],
+    dimensionKeys: "__all"
+  },
+  {
+    label: "Incoming Traffic",
+    route: 'incoming_traffic',
+    data: newBusinessData,
+    categoryKeys: ['website_leads', "non_website_referrals"],
+    dimensionKeys: "__all"
+  }
+]
 
 const buildCategoryOptions = (data, categoryKeys) => {
   if (categoryKeys === "__all") {
@@ -60,7 +93,16 @@ const buildDimensionOptions = (data, dimensionKeys, categoryOptions) => {
   }));
 };
 
-const Projections = ({ data = lessonHourData, categoryKeys = "__all", dimensionKeys = "__all" }) => {
+const Title = ({ label }) => {
+  return (
+    <header style={{ maxWidth: 660, margin: "auto", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+      <h1 style={{ marginLeft: "0.5rem" }}>{label}</h1>
+      <Link to="/projections">Pick new path ↗</Link>
+    </header>
+  )
+}
+
+const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dimensionKeys = "__all" }) => {
   const [selectedMarkets, setSelectedMarkets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [dimension, setDimension] = useState();
@@ -68,9 +110,9 @@ const Projections = ({ data = lessonHourData, categoryKeys = "__all", dimensionK
   const [segmentEnd, setSegmentEnd] = useState("2020-02-28");
 
   // build options
-const marketOptions = data.map((d) => ({ value: d.name, label: d.name }));
-const categoryOptions = buildCategoryOptions(data, categoryKeys);
-const dimensionOptions = buildDimensionOptions(data, dimensionKeys, categoryOptions)
+  const marketOptions = data.map((d) => ({ value: d.name, label: d.name }));
+  const categoryOptions = buildCategoryOptions(data, categoryKeys);
+  const dimensionOptions = buildDimensionOptions(data, dimensionKeys, categoryOptions)
 
   const filters = [
     {
@@ -181,6 +223,7 @@ const dimensionOptions = buildDimensionOptions(data, dimensionKeys, categoryOpti
   if (!activeData.length) {
     return (
       <div>
+        <Title label={label} />
         <Filters filters={filters} />
         <hr style={{ maxWidth: 660, margin: `1rem auto` }} />
         <div style={{ textAlign: `center` }}>Select filters</div>
@@ -201,7 +244,8 @@ const dimensionOptions = buildDimensionOptions(data, dimensionKeys, categoryOpti
   ) {
     return (
       <div>
-        <Filters filters={filters} />
+        <Title label={label} />
+        <Filters label={label} filters={filters} />
         <hr style={{ maxWidth: 660, margin: `1rem auto` }} />
         <div style={{ maxWidth: 660, margin: `1rem auto` }}>
           <ul>
@@ -271,6 +315,7 @@ const dimensionOptions = buildDimensionOptions(data, dimensionKeys, categoryOpti
 
   return (
     <div>
+      <Title label={label} />
       <Filters filters={filters} />
       <hr style={{ maxWidth: 660, margin: `1rem auto` }} />
       <section>
@@ -283,7 +328,7 @@ const dimensionOptions = buildDimensionOptions(data, dimensionKeys, categoryOpti
             margin: `auto`,
           }}
         >
-          <h1>{chartTitle}</h1>
+          <h2>{chartTitle}</h2>
           <BarTime dataset={activeData} width={800} height={300} />
           <aside
             style={{
@@ -388,4 +433,30 @@ const dimensionOptions = buildDimensionOptions(data, dimensionKeys, categoryOpti
   );
 };
 
-export default Projections;
+const FallbackPage = () => (
+  <div style={{ maxWidth: 660, margin: "auto" }}>
+    <h1>Choose your data adventure</h1>
+    <ul>
+      {datasets.map(({ label, route }) => (
+        <li key={route} style={{ margin: "1rem" }}>
+          <Link to={`/projections/${route}`}>{label}</Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const ProjectionsApp = () => (
+  <Switch>
+    {datasets.map(({ route, ...rest }) => (
+      <Route key={route} path={`/projections/${route}`} exact>
+        <Projections {...rest} />
+      </Route>
+    ))}
+    <Route path="*">
+      <FallbackPage />
+    </Route>
+  </Switch>
+);
+
+export default ProjectionsApp;
