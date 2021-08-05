@@ -2,7 +2,6 @@ import React from "react";
 import { Link, Route, Switch } from "react-router-dom";
 import EmployeeHoursChart from "./EmployeeHoursChart";
 import Utilization from "./Utilization";
-import { Widget } from "../shared";
 
 const Landing = ({ match }) => (
   <div style={{ padding: 10, maxWidth: 900, width: "100%", margin: "auto" }}>
