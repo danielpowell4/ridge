@@ -17,8 +17,6 @@ import {
 
 import "./App.css";
 
-const Landing = (_) => <div>Select a category...</div>;
-
 const App = (_) => (
   <Router>
     <div style={{ marginBottom: "2rem" }}>

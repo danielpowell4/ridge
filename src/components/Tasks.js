@@ -91,11 +91,6 @@ class Tasks extends React.Component {
       y: [lowestValue, highestValue],
     };
 
-    const scatterDomainPadding = {
-      x: lastDate * 0.05,
-      y: highestValue,
-    };
-
     return (
       <div
         style={{

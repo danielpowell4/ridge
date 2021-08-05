@@ -3,15 +3,13 @@ import { Route, Switch, Link } from "react-router-dom";
 import moment from "moment";
 import { titleize } from "./utils";
 import { BarTime, ColorLabel } from "./charts";
+import { Segments } from "./segments";
 import Filters from "./Filters";
-
-// for stats
-import { mean, median, mode, min, max, sum } from "simple-statistics";
 
 // from dashboard-reports markets/recruitment/lesson_category_by_week_by_market.rb
 import lessonHourData from "./data/2021_march_lessons_by_market_by_category_with_grades_location.json";
 // from dashboard-reports/markets/recruitment/new_business_by_week_by_market.rb
-import newBusinessData from "./data/2021_march_new_business_by_market.json";
+import newBusinessData from "./data/2021_august_new_business_by_week_by_market.json";
 
 // expected data shape
 // [
@@ -42,7 +40,9 @@ const datasets = [
     route: 'early_signs',
     data: newBusinessData,
     categoryKeys: ["consultations", "projects_added"],
-    dimensionKeys: "__all"
+    dimensionKeys: "__all",
+    defaultSegmentStart: "2019-01-01",
+    defaultSegmentEnd: "2019-07-01"
   },
   {
     label: 'New Clients',
@@ -63,7 +63,7 @@ const datasets = [
 const buildCategoryOptions = (data, categoryKeys) => {
   if (categoryKeys === "__all") {
     return Object.keys(data[0].weeks[0])
-      .filter((key) => key !== "start_date")
+      .filter((key) => !["start_date", "week_number", "week_year"].includes(key))
       .map((catValue) => ({
         value: catValue,
         label: titleize(catValue),
@@ -102,12 +102,10 @@ const Title = ({ label }) => {
   )
 }
 
-const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dimensionKeys = "__all" }) => {
+const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dimensionKeys = "__all", defaultSegmentStart = "2018-07-02", defaultSegmentEnd = "2019-03-14"}) => {
   const [selectedMarkets, setSelectedMarkets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [dimension, setDimension] = useState();
-  const [segmentStart, setSegmentStart] = useState("2019-07-01");
-  const [segmentEnd, setSegmentEnd] = useState("2020-02-28");
 
   // build options
   const marketOptions = data.map((d) => ({ value: d.name, label: d.name }));
@@ -173,19 +171,7 @@ const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dim
       selected: dimensionOptions.filter((opt) => opt.value === dimension),
       onChange: (selected) => setDimension(selected.value),
       type: `Select`,
-    },
-    {
-      label: `First Segment Starts`,
-      selected: segmentStart,
-      onChange: (e) => setSegmentStart(e.target.value),
-      type: `date`,
-    },
-    {
-      label: `First Segment Ends`,
-      selected: segmentEnd,
-      onChange: (e) => setSegmentEnd(e.target.value),
-      type: `date`,
-    },
+    }
   ];
 
   let activeData = [];
@@ -194,15 +180,21 @@ const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dim
 
   if (!!markets.length && !!categories.length && !!dimension) {
     let weeklyTotals = {};
+    let weeklyUniq = {}; // from arrays of IDs
+    let uniqDimension = `__uniq_${dimension}`
 
     for (let market of markets) {
       for (let marketWeek of market.weeks) {
         for (let categoryOpt of categories) {
-          let val = marketWeek[categoryOpt.value][dimension];
           let weekStart = marketWeek.start_date;
 
+          let val = marketWeek[categoryOpt.value][dimension];
           let prevTotal = weeklyTotals[weekStart] || 0;
           weeklyTotals[weekStart] = prevTotal + val;
+
+          let uniqVal = marketWeek[categoryOpt.value][uniqDimension] || [];
+          let prevUniqs = weeklyUniq[weekStart] || [];
+          weeklyUniq[weekStart] = [...new Set(prevUniqs, uniqVal)];
         }
       }
     }
@@ -216,6 +208,7 @@ const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dim
           `Week of ${moment(weekStart).format("L")}`,
           `${total.toFixed(2)} ${dimension}`,
         ],
+        __uniq_ids: weeklyUniq[weekStart],
       };
     });
   }
@@ -231,65 +224,6 @@ const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dim
     );
   }
 
-  const fullRange = activeData.map((d) => d.y);
-  const segmentOneStart = moment(segmentStart);
-  const segmentOneEnd = moment(segmentEnd);
-  const segmentTwoStart = moment(segmentStart).add(1, "year");
-  const segmentTwoEnd = moment(segmentEnd).add(1, "year");
-
-  if (
-    !segmentOneStart.isValid() ||
-    !segmentOneEnd.isValid() ||
-    segmentOneEnd <= segmentOneStart
-  ) {
-    return (
-      <div>
-        <Title label={label} />
-        <Filters label={label} filters={filters} />
-        <hr style={{ maxWidth: 660, margin: `1rem auto` }} />
-        <div style={{ maxWidth: 660, margin: `1rem auto` }}>
-          <ul>
-            <li>
-              <strong>First segment starts: </strong>
-              {segmentOneStart.isValid() ? (
-                segmentOneStart.format("L")
-              ) : (
-                <span style={{ color: "red" }}>{`Not Valid (MM/DD/YYYY)`}</span>
-              )}
-            </li>
-            <li>
-              <strong>First segment ends: </strong>
-              {segmentOneEnd.isValid() ? (
-                segmentOneEnd.format("L")
-              ) : (
-                <span style={{ color: "red" }}>{`Not Valid (MM/DD/YYYY)`}</span>
-              )}
-              {segmentOneEnd <= segmentOneStart && (
-                <span
-                  style={{ color: "red" }}
-                >{` Must be after 'First segment starts'`}</span>
-              )}
-            </li>
-          </ul>
-        </div>
-      </div>
-    );
-  }
-
-  const dataSegmentOne = activeData.filter(({ x }) => {
-    return x > segmentOneStart && x < segmentOneEnd;
-  });
-  const dataSegmentTwo = activeData.filter(({ x }) => {
-    return x > segmentTwoStart && x < segmentTwoEnd;
-  });
-
-  const dataSegmentOneValues = !!dataSegmentOne.length
-    ? dataSegmentOne.map((d) => d.y)
-    : [0];
-  const dataSegmentTwoValues = !!dataSegmentTwo.length
-    ? dataSegmentTwo.map((d) => d.y)
-    : [0];
-
   let marketLabel = "";
   let categoryLabel = "";
   if (activeData.length) {
@@ -298,7 +232,7 @@ const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dim
     } else if (markets.length > 3) {
       marketLabel = `${markets.length} markets`;
     } else {
-      marketLabel = markets.map((m) => m.label).join(", ");
+      marketLabel = markets.map((m) => m.name).join(", ");
     }
 
     if (categories.length === categoryOptions.length) {
@@ -343,92 +277,11 @@ const Projections = ({ label, data = lessonHourData, categoryKeys = "__all", dim
           </aside>
         </div>
       </section>
-      <section>
-        <div
-          style={{
-            width: `100%`,
-            maxWidth: `1040px`,
-            display: `flex`,
-            flexFlow: `row wrap`,
-            margin: `auto`,
-          }}
-        >
-          <div style={{ width: "48%" }}>
-            <BarTime
-              width={400}
-              height={200}
-              dataset={dataSegmentOne}
-              fullRange={fullRange}
-              timeTickFormat={(t) => moment(t).format("M/D")}
-            />
-          </div>
-          <div style={{ width: "48%" }}>
-            <BarTime
-              width={400}
-              height={200}
-              dataset={dataSegmentTwo}
-              fullRange={fullRange}
-              timeTickFormat={(t) => moment(t).format("M/D")}
-            />
-          </div>
-          <h2 style={{ textAlign: `center` }}>
-            {chartTitle} | Simple Stat Breakdown
-          </h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Stat</th>
-                <th>{`${segmentOneStart.format("L")} - ${segmentOneEnd.format(
-                  "L"
-                )}`}</th>
-                <th>{`${segmentTwoStart.format("L")} - ${segmentTwoEnd.format(
-                  "L"
-                )}`}</th>
-                <th>Raw Change</th>
-                <th>% Change</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Num Weeks</td>
-                <td>{dataSegmentOneValues.length}</td>
-                <td>{dataSegmentTwoValues.length}</td>
-                <td></td>
-                <td></td>
-              </tr>
-              {[
-                ["Sum", sum],
-                ["Max", max],
-                ["Mean", mean],
-                ["Median", median],
-                ["Mode", mode],
-                ["Min", min],
-              ].map((pair, i) => {
-                const [label, callback] = pair;
-                let segOneValue = callback.call(
-                  undefined,
-                  dataSegmentOneValues
-                );
-                let segTwoValue = callback.call(
-                  undefined,
-                  dataSegmentTwoValues
-                );
-                let delta = segTwoValue - segOneValue;
-
-                return (
-                  <tr key={i}>
-                    <td>{label}</td>
-                    <td>{segOneValue.toFixed(2)}</td>
-                    <td>{segTwoValue.toFixed(2)}</td>
-                    <td>{delta.toFixed(2)}</td>
-                    <td>{`${((delta / segOneValue) * 100).toFixed(2)}%`}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <Segments
+        activeData={activeData}
+        defaultSegmentStart={defaultSegmentStart}
+        defaultSegmentEnd={defaultSegmentEnd}
+      />
     </div>
   );
 };
