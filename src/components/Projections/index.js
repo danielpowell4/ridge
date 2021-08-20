@@ -39,25 +39,11 @@ const datasets = [
     label: 'Early Signs',
     route: 'early_signs',
     data: newBusinessData,
-    categoryKeys: ["consultations", "projects_added"],
+    categoryKeys: "__all",
     dimensionKeys: "__all",
     defaultSegmentStart: "2019-01-01",
     defaultSegmentEnd: "2019-07-01"
   },
-  {
-    label: 'New Clients',
-    route: 'new_clients',
-    data: newBusinessData,
-    categoryKeys: ['clients_added', "clients_activated"],
-    dimensionKeys: "__all"
-  },
-  {
-    label: "Incoming Traffic",
-    route: 'incoming_traffic',
-    data: newBusinessData,
-    categoryKeys: ['website_leads', "non_website_referrals"],
-    dimensionKeys: "__all"
-  }
 ]
 
 const buildCategoryOptions = (data, categoryKeys) => {
