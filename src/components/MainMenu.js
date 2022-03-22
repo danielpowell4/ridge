@@ -32,6 +32,9 @@ const Menu = (_) => (
     <NavLink activeClassName="active" to="/score-report">
       Score Report
     </NavLink>
+    <NavLink activeClassName="active" to="/scores">
+      ACT Achievement
+    </NavLink>
   </nav>
 );
 

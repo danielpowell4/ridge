@@ -8,85 +8,92 @@ import {
 } from "victory";
 import { turnaround as dummyData } from "../lib/sampleData";
 
-const buildHistogram = (data, key, steps) => {
-  const min = data.reduce(
-    (min, p) => (p[key] < min ? p[key] : min),
-    data[0][key]
-  );
-  const max = data.reduce(
-    (max, p) => (p[key] > max ? p[key] : max),
-    data[0][key]
-  );
+const buildHistogram = (data, attr, steps) => {
+  const points = data
+    .map((p) => Number(p[attr]))
+    .filter((p) => !Number.isNaN(p));
+
+  const min = Math.min(...points);
+  const max = Math.max(...points);
 
   const stepSize = (max - min) / steps;
 
   let compiled = [];
-  for (let i = min; i < max; i = i + stepSize) {
-    let nextStep = i + stepSize;
-    let count = data.filter((d) => d[key] > i && d[key] < nextStep).length;
+  for (let minBound = min; minBound < max; minBound = minBound + stepSize) {
+    let topBound = minBound + stepSize;
+    let count = points.filter((p) => p >= minBound && p < topBound).length;
     compiled.push({
-      x: (i + nextStep) / 2,
+      x: (minBound + topBound) / 2,
       y: count,
-      label: `${i.toFixed(2)}-${nextStep.toFixed(2)}: ${count}`,
+      label: `${minBound.toFixed(2)}-${topBound.toFixed(2)}: ${count}`,
     });
   }
 
   return { data: compiled, stepSize, min, max };
 };
 
-class Histogram extends Component {
-  state = {
-    stepSize: 0,
-    data: [],
-  };
-
-  componentDidMount() {
-    const { data, stepSize, min, max } = buildHistogram(
-      this.props.data,
-      this.props.key,
-      this.props.steps
-    );
-
-    this.setState({ data, stepSize, min, max });
-  }
-
-  render() {
-    if (this.state.data.length === 0) {
-      return <div>Loading...</div>;
-    }
-    const xDomain = [
-      this.state.min - this.state.stepSize,
-      this.state.max + this.state.stepSize,
-    ];
-
-    return (
-      <div style={{ maxWidth: 400, width: "100%" }}>
-        <VictoryChart
-          theme={VictoryTheme.material}
-          domain={{ x: xDomain }}
-          domainPadding={{ x: this.state.stepSize * 2 }}
-          height={400}
-          width={400}
-        >
-          <VictoryAxis dependentAxis offset="left" offsetX={50} />
-          <VictoryAxis tickCount={this.props.steps} />
-          <VictoryBar
-            barRatio={0.9}
-            alignment="middle"
-            style={{ data: { fill: "tomato" } }}
-            data={this.state.data}
-            labelComponent={<VictoryTooltip />}
-          />
-        </VictoryChart>
-      </div>
-    );
-  }
-}
-
-Histogram.defaultProps = {
-  steps: 10,
-  data: dummyData,
-  key: "turnaround",
+const add = (total, a) => {
+  return total + a;
 };
+
+const applyBins = (data, attr, bins) => {
+  const points = data
+    .map((p) => Number(p[attr]))
+    .filter((p) => !Number.isNaN(p));
+
+  const min = bins[0].min;
+  const max = bins[bins.length - 1].max;
+
+  const stepSizes = bins.map(({ min, max }) => max - min);
+  const stepSize = (stepSizes.reduce(add, 0) / stepSizes.length).toFixed(2);
+
+  const compiled = bins.map(({ min, max }) => {
+    let count = points.filter((p) => p >= min && p <= max).length;
+    return {
+      x: (min + max) / 2,
+      y: count,
+      label: `${min}-${max}: ${count}`,
+    };
+  });
+
+  return { data: compiled, stepSize, min, max };
+};
+
+const Histogram = ({ dataset, attr, steps, bins }) => {
+  const binType = steps ? "steps" : "bins";
+  const { data, stepSize, min, max } =
+    binType === "steps"
+      ? buildHistogram(dataset, attr, steps)
+      : applyBins(dataset, attr, bins);
+
+  const xDomain = [min - 2, max + 2];
+
+  return (
+    <div style={{ maxWidth: 400, width: "100%" }}>
+      <VictoryChart
+        theme={VictoryTheme.material}
+        domain={{ x: xDomain }}
+        domainPadding={{ x: stepSize * 2 }}
+        height={400}
+        width={400}
+      >
+        <VictoryAxis dependentAxis offset="left" offsetX={50} />
+        <VictoryAxis tickCount={steps || bins.length + 2} />
+        <VictoryBar
+          barRatio={0.67}
+          alignment="middle"
+          style={{ data: { fill: "tomato" } }}
+          data={data}
+          labelComponent={<VictoryTooltip />}
+        />
+      </VictoryChart>
+    </div>
+  );
+};
+
+// Histogram.defaultProps = {
+//   data: dummyData,
+//   attr: "turnaround",
+// };
 
 export default Histogram;

@@ -10,4 +10,5 @@ export { default as SummaryTurnaround } from "./SummaryTurnaround";
 
 
 export { default as ScoreReport } from "./ScoreReport";
+export { default as ScorePredictor } from "./ScorePredictor";
 export { default as Projections } from "./Projections";
