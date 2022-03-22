@@ -157,8 +157,8 @@ const ScorePredictor = () => {
         </ul>
         <h4>Practice Tests</h4>
         {[
-          ["Min Tests", "practice_test_min", practice_test_min],
-          ["Max Tests", "practice_test_max", practice_test_max],
+          ["Min", "practice_test_min", practice_test_min],
+          ["Max", "practice_test_max", practice_test_max],
         ].map(([label, name, value]) => (
           <React.Fragment key={label}>
             <label htmlFor={name}>{label}</label>
@@ -176,8 +176,8 @@ const ScorePredictor = () => {
         ))}
         <h4>Real Tests</h4>
         {[
-          ["Min Tests", "real_test_min", real_test_min],
-          ["Max Tests", "real_test_max", real_test_max],
+          ["Min", "real_test_min", real_test_min],
+          ["Max", "real_test_max", real_test_max],
         ].map(([label, name, value]) => (
           <React.Fragment key={label}>
             <label htmlFor={name}>{label}</label>
@@ -195,8 +195,8 @@ const ScorePredictor = () => {
         ))}
         <h4>Prep Hours</h4>
         {[
-          ["Min Hours", "prep_hours_min", prep_hours_min],
-          ["Max Hours", "prep_hours_max", prep_hours_max],
+          ["Min", "prep_hours_min", prep_hours_min],
+          ["Max", "prep_hours_max", prep_hours_max],
         ].map(([label, name, value]) => (
           <React.Fragment key={label}>
             <label htmlFor={name}>{label}</label>
@@ -207,7 +207,7 @@ const ScorePredictor = () => {
               value={value}
               step={1}
               min={1}
-              max={PRACTICE_TEST_MAX}
+              max={PREP_HOURS_MAX}
               onChange={(e) => setSearch({ ...search, [name]: e.target.value })}
             />
           </React.Fragment>
