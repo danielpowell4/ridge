@@ -12,6 +12,7 @@ import {
   SummaryTurnaround,
 
   Projections,
+  ScorePredictor,
   ScoreReport,
 } from "./components";
 
@@ -32,6 +33,7 @@ const App = (_) => (
         <Route path={`/referrals`} component={Referrals} />
 
         <Route path={`/projections`} component={Projections} />
+        <Route path={`/scores`} component={ScorePredictor} />
         <Route path={`/score-report`} component={ScoreReport} />
         <Route exact path="/" component={Projections} />
       </main>
