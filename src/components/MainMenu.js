@@ -33,7 +33,13 @@ const Menu = (_) => (
       Score Report
     </NavLink>
     <NavLink activeClassName="active" to="/scores">
-      ACT Achievement
+      ACT Population
+    </NavLink>
+    <NavLink activeClassName="active" to="/act-timeline">
+      ACT Timeline
+    </NavLink>
+    <NavLink activeClassName="active" to="/csv-to-json">
+      CSV to JSON
     </NavLink>
   </nav>
 );

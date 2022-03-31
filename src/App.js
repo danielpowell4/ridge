@@ -14,6 +14,7 @@ import {
   Projections,
   ScorePredictor,
   ScoreReport,
+  ScoreTimeline,
 } from "./components";
 
 import "./App.css";
@@ -35,6 +36,8 @@ const App = (_) => (
         <Route path={`/projections`} component={Projections} />
         <Route path={`/scores`} component={ScorePredictor} />
         <Route path={`/score-report`} component={ScoreReport} />
+        <Route path={`/act-timeline`} component={ScoreTimeline} />
+
         <Route exact path="/" component={Projections} />
       </main>
     </div>
