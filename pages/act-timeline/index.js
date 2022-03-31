@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Layout } from "../../components";
 
+// see https://github.com/privateprep/dashboard-reports/blob/main/test_progression/act_score_predictor.rb
 import fullDataset from "./actAchievement-Mar3022.json";
 
 // TODO: clean data to remove:
@@ -25,6 +26,8 @@ const ScoreTimeline = () => {
   const [binRange, setBinRange] = React.useState(0); // for grace
   const [scoreField, setScoreField] = React.useState(SCORE_KEYS[0]);
 
+  const independentField = "Test Number";
+
   const startingField = `Diag ${scoreField}`;
 
   const minIncluded = diagScore - binRange;
@@ -37,9 +40,9 @@ const ScoreTimeline = () => {
       (row) =>
         row[startingField] >= minIncluded && row[startingField] <= maxIncluded
     )
-    .filter((row) => row["Test Number"] <= maxTestNum);
+    .filter((row) => row[independentField] <= maxTestNum);
 
-  const uniqX = [...new Set(filtered.map((row) => row["Test Number"]))].sort(
+  const uniqX = [...new Set(filtered.map((row) => row[independentField]))].sort(
     numberSort
   );
 
@@ -48,7 +51,7 @@ const ScoreTimeline = () => {
   let sampleSize = 0;
 
   for (let x of uniqX) {
-    const sameTestNum = filtered.filter((row) => row["Test Number"] === x);
+    const sameTestNum = filtered.filter((row) => row[independentField] === x);
     const sameTestScores = sameTestNum.map((row) => row[scoreField]);
     const scoreRange = [...new Set(sameTestScores)].sort(numberSort);
     let maxFrequency = 0;
