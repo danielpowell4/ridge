@@ -1,10 +1,8 @@
 # Ridge
 
-Beyond few `VLOOKUP`s, a `SUM` and an `AVERAGE`, using excel becomes a hassle.
+Beyond few `VLOOKUP`s, a `SUM` and an `AVERAGE`, using excel becomes a hassle. Understanding a data's shape shouldn't be.
 
-It shouldn't make to be.
-
-In dreamworld, this project is to evolve into a series of boilerplate components that make time to insight adequately "easy".
+In dreamworld, this project is to evolve into a series of boilerplate components that make time to insight adequately "easy" or at least enjoyable.
 
 This project now exists inside a [NextJS](https://nextjs.org/) mindset. Pages go in pages. Components goes into components.
 
