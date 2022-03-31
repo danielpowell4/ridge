@@ -16,11 +16,13 @@ import { min, max, median, mean, mode } from "simple-statistics";
 
 const numberSort = (a, b) => a - b;
 
+const SCORE_KEYS = ["Composite", "English", "Math", "Reading", "Science"];
+
 const ScoreTimeline = () => {
   const [diagScore, setDiagScore] = React.useState(27);
   const [binRange, setBinRange] = React.useState(0); // for grace
+  const [scoreField, setScoreField] = React.useState(SCORE_KEYS[0]);
 
-  const scoreField = "Composite";
   const startingField = `Diag ${scoreField}`;
 
   const minIncluded = diagScore - binRange;
@@ -97,7 +99,19 @@ const ScoreTimeline = () => {
       <details open>
         <summary>Filters</summary>
         <ul>
-          <li>scoreField: {scoreField}</li>
+          <li>
+            <label htmlFor="scoreField">scoreField</label>{" "}
+            <select
+              value={scoreField}
+              onChange={(e) => setScoreField(e.target.value)}
+            >
+              {SCORE_KEYS.map((opt) => (
+                <option value={opt} selected={opt === scoreField}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          </li>
           <li>startingField: {startingField}</li>
           <li>
             <label for="starting_score">Starting Score: {diagScore}</label>
@@ -119,7 +133,7 @@ const ScoreTimeline = () => {
               name="binRange"
               value={binRange}
               min={0}
-              max={3}
+              max={18}
               onChange={(e) => setBinRange(parseInt(e.target.value))}
             />
           </li>
@@ -138,33 +152,34 @@ const ScoreTimeline = () => {
         <summary>sample points</summary>
         <pre>{JSON.stringify(data.slice(0, 4), null, 1)}</pre>
       </details>
-      <div style={{ maxWidth: 800, width: "100%", margin: "auto" }}>
-        <VictoryChart
-          // theme={VictoryTheme.material}
-          domain={{ x: xDomain, y: yDomain }}
-          domainPadding={20}
-          height={400}
-          width={800}
-        >
-          <VictoryBoxPlot
-            boxWidth={20}
-            data={ledger.map((helper) => ({
-              x: helper.x,
-              y: helper.scores,
-            }))}
-          />
-        </VictoryChart>
-      </div>
-      <div style={{ maxWidth: 800, width: "100%", margin: "auto" }}>
-        <VictoryChart
-          theme={VictoryTheme.material}
-          domain={{ x: xDomain, y: yDomain }}
-          domainPadding={20}
-          height={400}
-          width={800}
-        >
-          <VictoryScatter style={{ data: { fill: "#c43a31" } }} data={data} />
-        </VictoryChart>
+      <div style={{ display: "flex" }}>
+        <div style={{ flex: "1 0 240px" }}>
+          <VictoryChart
+            theme={VictoryTheme.material}
+            domain={{ x: xDomain, y: yDomain }}
+            domainPadding={20}
+            height={400}
+            width={800}
+          >
+            <VictoryScatter style={{ data: { fill: "#c43a31" } }} data={data} />
+          </VictoryChart>
+        </div>
+        <div style={{ flex: "1 0 240px" }}>
+          <VictoryChart
+            domain={{ x: xDomain, y: yDomain }}
+            domainPadding={20}
+            height={400}
+            width={800}
+          >
+            <VictoryBoxPlot
+              boxWidth={20}
+              data={ledger.map((helper) => ({
+                x: helper.x,
+                y: helper.scores,
+              }))}
+            />
+          </VictoryChart>
+        </div>
       </div>
       <table>
         <thead>
@@ -195,20 +210,47 @@ const ScoreTimeline = () => {
                 <td>
                   <details>
                     <table>
+                      <thead>
+                        <tr>
+                          <th>Score</th>
+                          <th>Students</th>
+                          <th>% of Total</th>
+                          <th>or Better #</th>
+                          <th>or Better %</th>
+                        </tr>
+                      </thead>
                       <tbody>
-                        {helper.frequencies.map((freq) => (
-                          <tr key={freq.y}>
-                            <td>{freq.y}</td>
-                            <td>{freq.count}</td>
-                            <td>
-                              {(
-                                (freq.count / helper.totalMatches) *
-                                100
-                              ).toFixed(2)}
-                              %
-                            </td>
-                          </tr>
-                        ))}
+                        {helper.frequencies.map((freq) => {
+                          const orBetter = helper.frequencies.filter(
+                            (other) => other.y >= freq.y
+                          );
+                          const orBetterTallyTotal = orBetter.reduce(
+                            (total, item) => (total += item.count),
+                            0
+                          );
+
+                          return (
+                            <tr key={freq.y}>
+                              <td>{freq.y}</td>
+                              <td>{freq.count}</td>
+                              <td>
+                                {(
+                                  (freq.count / helper.totalMatches) *
+                                  100
+                                ).toFixed(2)}
+                                %
+                              </td>
+                              <td>{orBetterTallyTotal}</td>
+                              <td>
+                                {(
+                                  (orBetterTallyTotal / helper.totalMatches) *
+                                  100
+                                ).toFixed(2)}
+                                %
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </details>
