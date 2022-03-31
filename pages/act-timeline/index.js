@@ -25,24 +25,25 @@ const ScoreTimeline = () => {
   const [diagScore, setDiagScore] = React.useState(27);
   const [binRange, setBinRange] = React.useState(0); // for grace
   const [scoreField, setScoreField] = React.useState(SCORE_KEYS[0]);
+  const [maxX, setMaxX] = React.useState(12);
 
-  const independentField = "Test Number";
+  const xField = "Test Number";
 
   const startingField = `Diag ${scoreField}`;
 
   const minIncluded = diagScore - binRange;
   const maxIncluded = diagScore + binRange;
 
-  const maxTestNum = 10;
+  const absoluteMaxX = max(fullDataset.map((row) => row[xField]));
 
   const filtered = fullDataset
+    .filter((row) => row[xField] <= maxX)
     .filter(
       (row) =>
         row[startingField] >= minIncluded && row[startingField] <= maxIncluded
-    )
-    .filter((row) => row[independentField] <= maxTestNum);
+    );
 
-  const uniqX = [...new Set(filtered.map((row) => row[independentField]))].sort(
+  const uniqX = [...new Set(filtered.map((row) => row[xField]))].sort(
     numberSort
   );
 
@@ -51,7 +52,7 @@ const ScoreTimeline = () => {
   let sampleSize = 0;
 
   for (let x of uniqX) {
-    const sameTestNum = filtered.filter((row) => row[independentField] === x);
+    const sameTestNum = filtered.filter((row) => row[xField] === x);
     const sameTestScores = sameTestNum.map((row) => row[scoreField]);
     const scoreRange = [...new Set(sameTestScores)].sort(numberSort);
     let maxFrequency = 0;
@@ -95,7 +96,7 @@ const ScoreTimeline = () => {
     };
   });
 
-  const xDomain = [0, maxTestNum];
+  const xDomain = [0, maxX];
   const yDomain = [1, 36];
 
   return (
@@ -142,7 +143,20 @@ const ScoreTimeline = () => {
               onChange={(e) => setBinRange(parseInt(e.target.value))}
             />
           </li>
-          <li>maxTestNum: {maxTestNum}</li>
+          <li>
+            <label htmlFor="maxX">
+              {xField} max: {maxX}
+            </label>
+            <input
+              type="range"
+              id="maxX"
+              name="maxX"
+              value={maxX}
+              min={0}
+              max={absoluteMaxX}
+              onChange={(e) => setMaxX(parseInt(e.target.value))}
+            />
+          </li>
         </ul>
       </div>
       <hr />
