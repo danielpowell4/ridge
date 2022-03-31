@@ -1,6 +1,8 @@
 import styles from "./layout.module.css";
 import Head from "next/head";
 
+import { Nav } from ".";
+
 export const siteTitle = "Ridge Charts and Graphs";
 const description = "Codename DANIOOOOO";
 
@@ -8,7 +10,7 @@ const description = "Codename DANIOOOOO";
 const sample = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const EMOJI_OF_BUILD = ["🐕", "👨‍🚀", "👨‍💻", "🖼", "🚀"];
 
-const Layout = ({ children }) => {
+const Layout = ({ children, showNav = true }) => {
   return (
     <>
       <div className={styles.container}>
@@ -25,6 +27,11 @@ const Layout = ({ children }) => {
           <meta name="og:title" content={siteTitle} />
           <meta name="og:description" content={description} />
         </Head>
+        {showNav && (
+          <header>
+            <Nav />
+          </header>
+        )}
         <main>{children}</main>
       </div>
       <footer className={styles.footer}>
