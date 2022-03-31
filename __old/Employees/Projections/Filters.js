@@ -1,5 +1,5 @@
 import * as React from "react";
-import Select from "react-select";
+// import Select from "react-select";
 import moment from "moment";
 
 const Filters = ({ filters }) => (
@@ -32,10 +32,28 @@ const Filters = ({ filters }) => (
             <input
               type={filter.type}
               value={filter.selected}
-              onChange={e => filter.onChange(e.target.value)}
+              onChange={(e) => filter.onChange(e.target.value)}
             />
-            <button onClick={() => filter.onChange(moment(filter.selected).add(1, "months").format("YYYY-MM-DD"))}>+ Month</button>
-            <button onClick={() => filter.onChange(moment(filter.selected).subtract(1, "months").format("YYYY-MM-DD"))}>- Month</button>
+            <button
+              onClick={() =>
+                filter.onChange(
+                  moment(filter.selected).add(1, "months").format("YYYY-MM-DD")
+                )
+              }
+            >
+              + Month
+            </button>
+            <button
+              onClick={() =>
+                filter.onChange(
+                  moment(filter.selected)
+                    .subtract(1, "months")
+                    .format("YYYY-MM-DD")
+                )
+              }
+            >
+              - Month
+            </button>
           </>
         ) : filter.type === `checkboxGroup` ? (
           <div

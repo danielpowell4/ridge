@@ -100,9 +100,9 @@ const ScoreTimeline = () => {
 
   return (
     <Layout>
-      <h1>Score Timeline</h1>
-      <details open>
-        <summary>Filters</summary>
+      <h1>ACT Timeline</h1>
+      <div>
+        <h3>Filters</h3>
         <ul>
           <li>
             <label htmlFor="scoreField">scoreField</label>{" "}
@@ -119,7 +119,7 @@ const ScoreTimeline = () => {
           </li>
           <li>startingField: {startingField}</li>
           <li>
-            <label for="starting_score">Starting Score: {diagScore}</label>
+            <label htmlFor="starting_score">Starting Score: {diagScore}</label>
             <input
               type="range"
               id="starting_score"
@@ -144,19 +144,8 @@ const ScoreTimeline = () => {
           </li>
           <li>maxTestNum: {maxTestNum}</li>
         </ul>
-      </details>
-      <details>
-        <summary>dataset keys</summary>
-        <pre>{JSON.stringify(Object.keys(fullDataset[0]), null, 2)}</pre>
-      </details>
-      <details>
-        <summary>sample rows</summary>
-        <pre>{JSON.stringify(fullDataset.slice(0, 4), null, 1)}</pre>
-      </details>
-      <details>
-        <summary>sample points</summary>
-        <pre>{JSON.stringify(data.slice(0, 4), null, 1)}</pre>
-      </details>
+      </div>
+      <hr />
       <div style={{ display: "flex" }}>
         <div style={{ flex: "1 0 240px" }}>
           <VictoryChart
@@ -265,6 +254,19 @@ const ScoreTimeline = () => {
           })}
         </tbody>
       </table>
+      <hr />
+      <details>
+        <summary>dataset keys</summary>
+        <pre>{JSON.stringify(Object.keys(fullDataset[0]), null, 2)}</pre>
+      </details>
+      <details>
+        <summary>sample rows</summary>
+        <pre>{JSON.stringify(fullDataset.slice(0, 4), null, 1)}</pre>
+      </details>
+      <details>
+        <summary>sample points</summary>
+        <pre>{JSON.stringify(data.slice(0, 4), null, 1)}</pre>
+      </details>
     </Layout>
   );
 };
