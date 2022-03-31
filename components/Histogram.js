@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import {
   VictoryAxis,
   VictoryChart,
@@ -6,7 +5,6 @@ import {
   VictoryBar,
   VictoryTheme,
 } from "victory";
-import { turnaround as dummyData } from "../lib/sampleData";
 
 const buildHistogram = (data, attr, steps) => {
   const points = data
@@ -90,10 +88,5 @@ const Histogram = ({ dataset, attr, steps, bins }) => {
     </div>
   );
 };
-
-// Histogram.defaultProps = {
-//   data: dummyData,
-//   attr: "turnaround",
-// };
 
 export default Histogram;

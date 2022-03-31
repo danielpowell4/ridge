@@ -1,6 +1,8 @@
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
 
+import { LINKS } from "../components/Nav";
+
 export default function Home() {
   return (
     <div className={styles.container}>
@@ -23,12 +25,17 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <Link href="/products">
-            <a className={styles.card}>
-              <h3>{`Products →`}</h3>
-              <p>Look through products gathered from API.</p>
-            </a>
-          </Link>
+          {LINKS.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <a className={styles.card}>
+                <h3>
+                  {item.label}
+                  {` →`}
+                </h3>
+                <p>{item.description}</p>
+              </a>
+            </Link>
+          ))}
         </div>
       </main>
     </div>

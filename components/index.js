@@ -1,16 +1,4 @@
-export { default as Employees } from "./Employees";
-export { default as MainMenu } from "./MainMenu";
-export { default as Tasks } from "./Tasks";
-export { default as Column } from "./Column";
+export { default as Layout } from "./Layout";
+export { default as Nav } from "./Nav";
+
 export { default as Histogram } from "./Histogram";
-export { default as MaterialRequests } from "./MaterialRequests";
-export { default as Referrals } from "./Referrals";
-export { default as Timegraph } from "./Timegraph";
-export { default as SummaryTurnaround } from "./SummaryTurnaround";
-
-export { default as CSVToJSON } from "./CSVToJSON"; // WIP
-
-export { default as ScorePredictor } from "./ScorePredictor";
-export { default as ScoreReport } from "./ScoreReport";
-export { default as ScoreTimeline } from "./ScoreTimeline";
-export { default as Projections } from "./Projections";
