@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useSearch } from "../../lib/customHooks";
+// import { useSearch } from "../../lib/customHooks";
 
 import { Histogram, Layout } from "../../components/";
 
@@ -58,7 +58,7 @@ const PREP_HOURS_MAX = Math.ceil(
 
 const ActPopulation = () => {
   const grad_years = [2018, 2019, 2020, 2021, 2022];
-  const [search, setSearch] = useSearch();
+  const [search, setSearch] = React.useState({});
 
   const result_type = search.result_type || "diag";
   const market_ids = search.market_ids || markets.map((m) => m["value"]);
