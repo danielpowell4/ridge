@@ -8,6 +8,7 @@ export { default as Referrals } from "./Referrals";
 export { default as Timegraph } from "./Timegraph";
 export { default as SummaryTurnaround } from "./SummaryTurnaround";
 
+export { default as CSVToJSON } from "./CSVToJSON"; // WIP
 
 export { default as ScoreReport } from "./ScoreReport";
 export { default as ScorePredictor } from "./ScorePredictor";

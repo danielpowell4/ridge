@@ -10,7 +10,7 @@ import {
   MaterialRequests,
   Referrals,
   SummaryTurnaround,
-
+  CSVToJSON,
   Projections,
   ScorePredictor,
   ScoreReport,
@@ -31,7 +31,7 @@ const App = (_) => (
         <Route path={`/lesson-turnaround`} component={SummaryTurnaround} />
         <Route path={`/material-requests`} component={MaterialRequests} />
         <Route path={`/referrals`} component={Referrals} />
-
+        <Route path={`/csv-to-json`} component={CSVToJSON} />
         <Route path={`/projections`} component={Projections} />
         <Route path={`/scores`} component={ScorePredictor} />
         <Route path={`/score-report`} component={ScoreReport} />
