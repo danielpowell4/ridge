@@ -111,7 +111,7 @@ const ScoreTimeline = () => {
               onChange={(e) => setScoreField(e.target.value)}
             >
               {SCORE_KEYS.map((opt) => (
-                <option value={opt} selected={opt === scoreField}>
+                <option key={opt} value={opt} selected={opt === scoreField}>
                   {opt}
                 </option>
               ))}

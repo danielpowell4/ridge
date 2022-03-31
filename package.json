@@ -15,13 +15,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "format": "prettier --write src/**/*.{js,css,json}"
+    "start": "next start"
   },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "eslint": "^8.12.0",
+    "eslint-config-next": "12.1.4"
+  }
 }
