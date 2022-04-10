@@ -2,7 +2,7 @@ import * as React from "react";
 import { Layout, Histogram } from "../../components";
 
 // see https://github.com/privateprep/dashboard-reports/blob/main/test_progression/act_score_predictor.rb
-import fullDataset from "./actAchievement-Mar3022.json";
+import fullDataset from "./actAchievement-Ap1022.json";
 
 // TODO: clean data to remove:
 // - Test Num 1 != Diag
@@ -22,9 +22,16 @@ const numberSort = (a, b) => a - b;
 const MAX_SCORE = 36;
 const SCORE_KEYS = ["Composite", "English", "Math", "Reading", "Science"];
 
-const PointsCapturedTable = ({ diagScore }) => {
+const pointsCaptured = (diagScore, score) => {
   const pointsPossible = MAX_SCORE - diagScore;
+  if (pointsPossible == 0) return 0;
 
+  const pointsAchieved = score - diagScore;
+  const ppc = (pointsAchieved / pointsPossible) * 100;
+  return ppc.toFixed(2);
+};
+
+const PointsCapturedTable = ({ diagScore }) => {
   let possibleScores = [];
   for (let score = diagScore; score <= MAX_SCORE; score++) {
     possibleScores.push(score);
@@ -34,18 +41,18 @@ const PointsCapturedTable = ({ diagScore }) => {
     <div>
       <h2>Percent Points Captured</h2>
       <table>
-        <tr>
-          {possibleScores.map((score) => (
-            <td key={score}>{score}</td>
-          ))}
-        </tr>
-        <tr>
-          {possibleScores.map((score) => {
-            const pointsAchieved = score - diagScore;
-            const ppc = (pointsAchieved / pointsPossible) * 100;
-            return <td key={score}>{ppc.toFixed(2)}%</td>;
-          })}
-        </tr>
+        <tbody>
+          <tr>
+            {possibleScores.map((score) => (
+              <td key={score}>{score}</td>
+            ))}
+          </tr>
+          <tr>
+            {possibleScores.map((score) => (
+              <td key={score}>{pointsCaptured(score)}%</td>
+            ))}
+          </tr>
+        </tbody>
       </table>
     </div>
   );
@@ -196,23 +203,7 @@ const ProgressTable = ({ ledger }) => {
   );
 };
 
-const TopScoreHistogram = ({ filtered, scoreField }) => {
-  const studentIds = [...new Set(filtered.map((row) => row["Student ID"]))];
-
-  const topScores = studentIds
-    .map((studentId) => {
-      const studentRows = filtered.filter(
-        (row) => row["Student ID"] === studentId
-      );
-      const realScores = studentRows
-        .filter((row) => row["Result Type"] === "Real")
-        .map((row) => row[scoreField]);
-      return Math.max(...realScores);
-    })
-    .filter((top) => !!top); // clear null
-
-  if (!topScores.length) return <p>No matching real tests</p>;
-
+const TopScoreHistogram = ({ topScores }) => {
   return (
     <div>
       <Histogram
@@ -225,13 +216,54 @@ const TopScoreHistogram = ({ filtered, scoreField }) => {
   );
 };
 
+const TopScoreTable = ({ topScores, diagScore }) => {
+  const topScoreCount = topScores.length;
+  if (!topScoreCount) return <p>No matching real tests</p>;
+
+  let topScoreTally = {};
+
+  for (let score of topScores) {
+    let prev = topScoreTally[score] || 0;
+    topScoreTally[score] = prev + 1;
+  }
+
+  const uniqScores = Object.keys(topScoreTally).sort(numberSort);
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Score</th>
+          <th>%PC</th>
+          <th>Students %</th>
+          <th>Students #</th>
+        </tr>
+      </thead>
+      <tbody>
+        {uniqScores.map((score) => (
+          <tr key={score}>
+            <td>{score}</td>
+            <td>{pointsCaptured(diagScore, score)}%</td>
+            <td>
+              {((topScoreTally[score] / topScoreCount) * 100).toFixed(2)}%
+            </td>
+            <td>{topScoreTally[score]}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
 const ScoreTimeline = () => {
   const [diagScore, setDiagScore] = React.useState(25);
   const [scoreField, setScoreField] = React.useState(SCORE_KEYS[0]);
   const [binRange, setBinRange] = React.useState(0); // for grace
   const [maxX, setMaxX] = React.useState(12);
+  const [minHours, setMinHours] = React.useState(15);
 
   const xField = "Test Number";
+  const hourField = "Total Hours";
 
   const startingField = `Diag ${scoreField}`;
 
@@ -239,14 +271,16 @@ const ScoreTimeline = () => {
   const maxIncluded = diagScore + binRange;
 
   const absoluteMaxX = max(fullDataset.map((row) => row[xField]));
+  const absoluteMaxHours = max(fullDataset.map((row) => row[hourField]));
 
   const filtered = fullDataset
     .filter((row) => row[xField] <= maxX)
     .filter(
       (row) =>
-        row[startingField] >= minIncluded && row[startingField] <= maxIncluded
+        row[startingField] >= minIncluded &&
+        row[startingField] <= maxIncluded &&
+        row[hourField] > minHours
     );
-
   const uniqX = [...new Set(filtered.map((row) => row[xField]))].sort(
     numberSort
   );
@@ -288,6 +322,19 @@ const ScoreTimeline = () => {
     });
   }
 
+  const studentIds = [...new Set(filtered.map((row) => row["Student ID"]))];
+  const topScores = studentIds
+    .map((studentId) => {
+      const studentRows = filtered.filter(
+        (row) => row["Student ID"] === studentId
+      );
+      const realScores = studentRows
+        .filter((row) => row["Result Type"] === "Real")
+        .map((row) => row[scoreField]);
+      return Math.max(...realScores);
+    })
+    .filter((top) => top > 0); // clear null
+
   const data = collection.map((set) => {
     const helper = ledger.find((tally) => tally.x === set.x);
     const stepPopRatio = helper.totalMatches / sampleSize;
@@ -317,7 +364,7 @@ const ScoreTimeline = () => {
                 onChange={(e) => setScoreField(e.target.value)}
               >
                 {SCORE_KEYS.map((opt) => (
-                  <option key={opt} value={opt} selected={opt === scoreField}>
+                  <option key={opt} value={opt}>
                     {opt}
                   </option>
                 ))}
@@ -364,10 +411,25 @@ const ScoreTimeline = () => {
                 onChange={(e) => setMaxX(parseInt(e.target.value))}
               />
             </li>
+            <li>
+              <label htmlFor="minHours">At least {minHours} Hours</label>
+              <input
+                type="range"
+                id="minHours"
+                name="minHours"
+                value={minHours}
+                min={0}
+                max={absoluteMaxHours}
+                onChange={(e) => setMinHours(parseInt(e.target.value))}
+              />
+            </li>
           </ul>
         </div>
         <div style={{ flex: "0 0 260px" }}>
-          <TopScoreHistogram filtered={filtered} scoreField={scoreField} />
+          <TopScoreHistogram topScores={topScores} />
+        </div>
+        <div style={{ flex: "1 0 260px" }}>
+          <TopScoreTable diagScore={diagScore} topScores={topScores} />
         </div>
       </div>
       <hr />
