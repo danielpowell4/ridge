@@ -229,6 +229,13 @@ const TopScoreTable = ({ topScores, diagScore }) => {
 
   const uniqScores = Object.keys(topScoreTally).sort(numberSort);
 
+  const orBetterTally = {};
+  for (let uniqScore of uniqScores) {
+    orBetterTally[uniqScore] = topScores.filter(
+      (score) => score >= uniqScore
+    ).length;
+  }
+
   return (
     <details>
       <summary>Top Scores Summary</summary>
@@ -239,6 +246,8 @@ const TopScoreTable = ({ topScores, diagScore }) => {
             <th>%PC</th>
             <th>Students %</th>
             <th>Students #</th>
+            <th>Or Better %</th>
+            <th>Or Better #</th>
           </tr>
         </thead>
         <tbody>
@@ -250,6 +259,10 @@ const TopScoreTable = ({ topScores, diagScore }) => {
                 {((topScoreTally[score] / topScoreCount) * 100).toFixed(2)}%
               </td>
               <td>{topScoreTally[score]}</td>
+              <td>
+                {((orBetterTally[score] / topScoreCount) * 100).toFixed(2)}%
+              </td>
+              <td>{orBetterTally[score]}</td>
             </tr>
           ))}
         </tbody>
