@@ -49,7 +49,7 @@ const PointsCapturedTable = ({ diagScore }) => {
           </tr>
           <tr>
             {possibleScores.map((score) => (
-              <td key={score}>{pointsCaptured(score)}%</td>
+              <td key={score}>{pointsCaptured(diagScore, score)}%</td>
             ))}
           </tr>
         </tbody>
