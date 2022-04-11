@@ -81,7 +81,7 @@ const ProgressTable = ({ ledger }) => {
             Crowd Size: {crowdPercent}% of Students
           </label>
           <small style={{ marginLeft: "1rem" }}>
-            Q1: 75%, Median: 50%, Q3: Top 25%
+            Q1: 75%+, Median: 50%+, Q3: Top 25%+
           </small>
         </li>
       </ul>
