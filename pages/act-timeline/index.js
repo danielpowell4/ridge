@@ -230,28 +230,31 @@ const TopScoreTable = ({ topScores, diagScore }) => {
   const uniqScores = Object.keys(topScoreTally).sort(numberSort);
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Score</th>
-          <th>%PC</th>
-          <th>Students %</th>
-          <th>Students #</th>
-        </tr>
-      </thead>
-      <tbody>
-        {uniqScores.map((score) => (
-          <tr key={score}>
-            <td>{score}</td>
-            <td>{pointsCaptured(diagScore, score)}%</td>
-            <td>
-              {((topScoreTally[score] / topScoreCount) * 100).toFixed(2)}%
-            </td>
-            <td>{topScoreTally[score]}</td>
+    <details>
+      <summary>Top Scores Summary</summary>
+      <table>
+        <thead>
+          <tr>
+            <th>Score</th>
+            <th>%PC</th>
+            <th>Students %</th>
+            <th>Students #</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {uniqScores.map((score) => (
+            <tr key={score}>
+              <td>{score}</td>
+              <td>{pointsCaptured(diagScore, score)}%</td>
+              <td>
+                {((topScoreTally[score] / topScoreCount) * 100).toFixed(2)}%
+              </td>
+              <td>{topScoreTally[score]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </details>
   );
 };
 
