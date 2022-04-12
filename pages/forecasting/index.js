@@ -104,7 +104,15 @@ const ForecastingPage = () => {
         <h2>SY 2021</h2>
         <p>
           Real and <span style={{ color: "deepskyblue" }}>Projected</span> hours
-          by project type based on avg annual ratios and hours this year.
+          by project type
+        </p>
+        <p>
+          <strong>SY Forecast Avg</strong> is based on an average of annual
+          ratios applied to hours this school year.
+        </p>
+        <p>
+          <strong>SY Forecast Total</strong> is based on a total of monthly
+          actual hours and projections.
         </p>
         <table>
           <thead>
