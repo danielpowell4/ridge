@@ -114,6 +114,7 @@ const ForecastingPage = () => {
                 <th key={month}>{month}</th>
               ))}
               <th>SY Forecast Avg</th>
+              <th>SY Forecast Total</th>
             </tr>
           </thead>
           <tbody>
@@ -138,6 +139,7 @@ const ForecastingPage = () => {
               });
 
               const syForecast = mean(monthlySYGuesses);
+              let syTotal = 0;
 
               return (
                 <tr key={projectType}>
@@ -149,20 +151,28 @@ const ForecastingPage = () => {
 
                     if (!syMonth) {
                       const monthRatio = monthAvgs[month];
+                      const value = syForecast * monthRatio;
+                      syTotal += value;
                       return (
                         <td key={month} style={{ color: "deepskyblue" }}>
-                          {(syForecast * monthRatio).toFixed()}
+                          {value.toFixed()}
                         </td>
                       );
                     }
 
-                    return (
-                      <td key={month}>{syMonth[`${projectType} Hours`]}</td>
-                    );
+                    const value = syMonth[`${projectType} Hours`];
+                    syTotal += value;
+
+                    return <td key={month}>{value}</td>;
                   })}
                   <td>
                     <span style={{ color: "deepskyblue" }}>
-                      {syForecast.toFixed(2)}
+                      {syForecast.toFixed(0)}
+                    </span>
+                  </td>
+                  <td>
+                    <span style={{ color: "deepskyblue" }}>
+                      {syTotal.toFixed(0)}
                     </span>
                   </td>
                 </tr>
