@@ -17,6 +17,9 @@ const PROJECT_TYPES = [
   "Other",
 ];
 
+const SCHOOL_YEARS = ["2018-2019", "2019-2020", "2020-2021"];
+const THIS_YEAR = "2021-2022";
+
 // SY Ordering
 const MONTHS = [7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6];
 const MONTH_NAMES = [
@@ -34,10 +37,10 @@ const MONTH_NAMES = [
   "Jun",
 ];
 
-const SUFFIX_OPTIONS = [
-  { label: "SY Year %", value: " YR %" },
-  { label: "Hours", value: " Hours" },
-];
+// const SUFFIX_OPTIONS = [
+//   { label: "SY Year %", value: " YR %" },
+//   { label: "Hours", value: " Hours" },
+// ];
 
 const MARKET_OPTIONS = [
   { value: "Consolidated", label: "Consolidated" },
@@ -107,10 +110,10 @@ const ForecastingPage = () => {
           <thead>
             <tr>
               <th>Project Type</th>
-              <th>SY Forecast</th>
               {MONTH_NAMES.map((month) => (
                 <th key={month}>{month}</th>
               ))}
+              <th>SY Forecast Avg</th>
             </tr>
           </thead>
           <tbody>
@@ -139,8 +142,6 @@ const ForecastingPage = () => {
               return (
                 <tr key={projectType}>
                   <td>{projectType}</td>
-                  <td>{syForecast.toFixed(2)}</td>
-
                   {MONTHS.map((month) => {
                     const syMonth = activeSYData.find(
                       (row) => row["sy_month"] == month
@@ -159,6 +160,11 @@ const ForecastingPage = () => {
                       <td key={month}>{syMonth[`${projectType} Hours`]}</td>
                     );
                   })}
+                  <td>
+                    <span style={{ color: "deepskyblue" }}>
+                      {syForecast.toFixed(2)}
+                    </span>
+                  </td>
                 </tr>
               );
             })}
@@ -202,6 +208,133 @@ const ForecastingPage = () => {
             })}
           </tbody>
         </table>
+        <h2>Project Types by Year</h2>
+        <p>Last few school years by month</p>
+        {PROJECT_TYPES.map((projectType) => {
+          const HOUR_KEY = `${projectType} Hours`;
+          const PERC_KEY = `${projectType} YR %`;
+          let syForecasts = [];
+          let syValue = 0;
+
+          return (
+            <div key={projectType}>
+              <h3>{projectType}</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <td>Month</td>
+                    {SCHOOL_YEARS.map((year) => (
+                      <td key={year}>{year}</td>
+                    ))}
+                    <td>{THIS_YEAR}</td>
+                    <td>SY Forecast Total</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {MONTHS.map((month, monthIndex) => {
+                    const pastMonths = projectTypeData.filter(
+                      (row) => row["sy_month"] == month
+                    );
+                    const pastAvgs = pastMonths.map((row) => row[PERC_KEY]);
+                    const pastAvg = mean(pastAvgs);
+                    const thisMonth =
+                      activeSYData.find((row) => row["sy_month"] == month) ||
+                      {};
+                    let thisValue = thisMonth[HOUR_KEY];
+                    const isForecasted = !thisValue && thisValue !== 0;
+                    let thisForecast;
+
+                    if (!isForecasted) {
+                      thisForecast = pastAvg > 0 ? thisValue / pastAvg : 0;
+                      syForecasts.push(thisForecast);
+                    } else {
+                      if (syForecasts.length) {
+                        const avgForecast = mean(syForecasts);
+                        thisValue = Number((pastAvg * avgForecast).toFixed());
+                      } else {
+                        thisValue = 0;
+                      }
+                      thisForecast = 0;
+                    }
+
+                    syValue += thisValue;
+
+                    return (
+                      <tr key={month}>
+                        <td>{MONTH_NAMES[monthIndex]}</td>
+                        {SCHOOL_YEARS.map((year) => {
+                          const row = pastMonths.find(
+                            (row) => row["sy_year"] == year
+                          );
+
+                          if (!row) return <td>-</td>;
+
+                          return (
+                            <td key={month}>
+                              {row[HOUR_KEY].toFixed(2)} (
+                              {(row[PERC_KEY] * 100).toFixed(2)}
+                              %)
+                            </td>
+                          );
+                        })}
+                        <td>
+                          {isForecasted ? (
+                            <span style={{ color: "deepskyblue" }}>
+                              {thisValue}
+                            </span>
+                          ) : (
+                            thisValue
+                          )}{" "}
+                          <span style={{ color: "deepskyblue" }}>
+                            ({(pastAvg * 100).toFixed(2)}%)
+                          </span>
+                        </td>
+                        <td>
+                          {isForecasted ? (
+                            "-"
+                          ) : (
+                            <span style={{ color: "deepskyblue" }}>
+                              {thisForecast.toFixed()}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  <tr>
+                    <td>SY Total</td>
+                    {SCHOOL_YEARS.map((year) => {
+                      const sampleMonth = projectTypeData.find(
+                        (row) => row["sy_year"] == year && row[HOUR_KEY] > 0
+                      );
+                      if (!sampleMonth) {
+                        return <td key={year}>-</td>;
+                      }
+
+                      const hours = sampleMonth[HOUR_KEY];
+                      const perc = sampleMonth[PERC_KEY];
+                      const syTotal = (hours / perc).toFixed(2);
+
+                      return <td key={year}>{syTotal}</td>;
+                    })}
+                    <td>
+                      <span style={{ color: "deepskyblue" }}>
+                        {syValue.toFixed()}
+                      </span>
+                      {` - Total`}
+                    </td>
+                    <td>
+                      <span style={{ color: "deepskyblue" }}>
+                        {syForecasts.length ? mean(syForecasts).toFixed() : 0}
+                      </span>
+                      {` - Avg`}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
       </div>
     </Layout>
   );
