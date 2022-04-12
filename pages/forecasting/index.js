@@ -127,6 +127,10 @@ const ForecastingPage = () => {
                 );
                 const monthTotal = monthRow[`${projectType} Hours`];
 
+                if (ratio === 0) {
+                  return 0; // avoid divide by 0
+                }
+
                 return monthTotal / ratio;
               });
 
