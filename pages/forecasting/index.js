@@ -2,7 +2,6 @@ import * as React from "react";
 import { Layout } from "../../components";
 
 import projectTypeHours from "./projectTypeHours.json";
-import projectTypeAvg from "./projectTypeAvg.json";
 
 import syData from "./syData2021.json";
 
@@ -62,7 +61,20 @@ const ForecastingPage = () => {
   const activeSYData = syData[market];
   const projectTypeData = projectTypeHours[market];
 
-  console.log("projectTypeData", projectTypeData);
+  let projectTypeAvg = {};
+  for (let projectType of PROJECT_TYPES) {
+    let projectTypeTally = {};
+
+    for (let month of MONTHS) {
+      const monthPercents = projectTypeData
+        .filter((row) => row["sy_month"] == month)
+        .map((row) => row[`${projectType} YR %`]);
+
+      projectTypeTally[month] = mean(monthPercents);
+    }
+
+    projectTypeAvg[projectType] = projectTypeTally;
+  }
 
   return (
     <Layout>
@@ -134,7 +146,7 @@ const ForecastingPage = () => {
                       const monthRatio = monthAvgs[month];
                       return (
                         <td key={month} style={{ color: "deepskyblue" }}>
-                          {(syForecast * monthRatio).toFixed(2)}
+                          {(syForecast * monthRatio).toFixed()}
                         </td>
                       );
                     }
