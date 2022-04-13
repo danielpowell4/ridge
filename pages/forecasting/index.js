@@ -15,6 +15,8 @@ const PROJECT_TYPES = [
   "Executive Functioning/Academic Skills",
   "Graduate Level Test Prep",
   "Other",
+  "Canceled",
+  "Total",
 ];
 
 const SCHOOL_YEARS = ["2018-2019", "2019-2020", "2020-2021"];
