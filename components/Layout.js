@@ -34,9 +34,7 @@ const Layout = ({ children, showNav = true }) => {
         )}
         <main>{children}</main>
       </div>
-      <footer className={styles.footer}>
-        Footer content from the 🏔 of Colorado
-      </footer>
+      <footer className={styles.footer}>Made in 🏔 Colorado</footer>
     </>
   );
 };
