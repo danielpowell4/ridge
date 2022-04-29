@@ -21,6 +21,11 @@ const POINTS = [
   "New Lesson Families",
   "Returning Lesson Families",
   "Continuing Lesson Families",
+
+  "Lesson Rev",
+  "Proxy Wages",
+  "Naive Profit",
+  "Tutor Pay Rate %",
 ];
 
 const YEARS = ["2018-19", "2019-20", "2020-21", "2021-22"];
