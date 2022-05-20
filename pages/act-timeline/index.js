@@ -2,7 +2,7 @@ import * as React from "react";
 import { Layout, Histogram } from "../../components";
 
 // see https://github.com/privateprep/dashboard-reports/blob/main/test_progression/act_score_predictor.rb
-import fullDataset from "./actAchievement-Ap1022.json";
+import fullDataset from "./actAchievement-May1922.json";
 
 // TODO: clean data to remove:
 // - Test Num 1 != Diag
@@ -81,7 +81,7 @@ const ProgressTable = ({ ledger }) => {
             Crowd Size: Top {crowdPercent}% of Students
           </label>
           <small style={{ marginLeft: "1rem" }}>
-            Q1: 75%+, Median: 50%+, Q3: Top 25%+
+            Winter: 75%+, Median: 50%+, Q3: Top 25%+
           </small>
         </li>
       </ul>
@@ -271,12 +271,30 @@ const TopScoreTable = ({ topScores, diagScore }) => {
   );
 };
 
+const ALL_GRADE_STARTS = [
+  "High School Freshman - Summer",
+  "High School Freshman - Spring",
+  "High School Sophomore - Summer",
+  "High School Sophomore - Fall",
+  "High School Sophomore - Winter",
+  "High School Sophomore - Spring",
+  "High School Junior - Summer",
+  "High School Junior - Fall",
+  "High School Junior - Winter",
+  "High School Junior - Spring",
+  "High School Senior - Summer",
+  "High School Senior - Fall",
+  "High School Senior - Winter",
+  "High School Senior - Spring",
+];
+
 const ScoreTimeline = () => {
   const [diagScore, setDiagScore] = React.useState(25);
   const [scoreField, setScoreField] = React.useState(SCORE_KEYS[0]);
   const [binRange, setBinRange] = React.useState(0); // for grace
   const [maxX, setMaxX] = React.useState(12);
   const [minHours, setMinHours] = React.useState(15);
+  const [gradeStarts, setGradeStarts] = React.useState(ALL_GRADE_STARTS);
 
   const xField = "Test Number";
   const hourField = "Total Hours";
@@ -289,7 +307,7 @@ const ScoreTimeline = () => {
   const absoluteMaxX = max(fullDataset.map((row) => row[xField]));
   const absoluteMaxHours = max(fullDataset.map((row) => row[hourField]));
 
-  const filtered = fullDataset
+  const scoreFiltered = fullDataset
     .filter((row) => row[xField] <= maxX)
     .filter(
       (row) =>
@@ -297,6 +315,11 @@ const ScoreTimeline = () => {
         row[startingField] <= maxIncluded &&
         row[hourField] > minHours
     );
+
+  const filtered = scoreFiltered.filter((row) =>
+    gradeStarts.includes(row["Grade Start"])
+  );
+
   const uniqX = [...new Set(filtered.map((row) => row[xField]))].sort(
     numberSort
   );
@@ -438,6 +461,48 @@ const ScoreTimeline = () => {
                 max={absoluteMaxHours}
                 onChange={(e) => setMinHours(parseInt(e.target.value))}
               />
+            </li>
+            <li>
+              <details>
+                <summary>First Lesson Timing</summary>
+                {ALL_GRADE_STARTS.map((gradeStart, gradeStartIndex) => {
+                  const id = `gradeStart_${gradeStartIndex}`;
+                  const isChecked = gradeStarts.includes(gradeStart);
+                  const studentIds = scoreFiltered
+                    .filter((row) => row["Grade Start"] === gradeStart)
+                    .map((row) => row["Student ID"]);
+                  const populationCount = [...new Set(studentIds)].length;
+
+                  return (
+                    <ul key={gradeStart}>
+                      <li>
+                        <input
+                          id={id}
+                          name={id}
+                          type="checkbox"
+                          value={gradeStart}
+                          checked={isChecked}
+                          onChange={(e) =>
+                            isChecked
+                              ? setGradeStarts((prev) =>
+                                  prev.filter(
+                                    (grade) => grade !== e.target.value
+                                  )
+                                )
+                              : setGradeStarts((prev) => [
+                                  ...prev,
+                                  e.target.value,
+                                ])
+                          }
+                        />
+                        <label htmlFor={id}>
+                          {`${gradeStart} (n = ${populationCount})`}
+                        </label>
+                      </li>
+                    </ul>
+                  );
+                })}
+              </details>
             </li>
           </ul>
         </div>
