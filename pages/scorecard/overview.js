@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Layout } from "../../components";
+import { FORMATTERS, asPercent, Nav } from "./_helper";
 import styles from "./styles.module.css";
 
 import weeklyData from "./weeklyData.json";
@@ -27,37 +28,6 @@ const ATTRIBUTE_NAMES = [
   "Consultations",
 ];
 
-const asDecimal = new Intl.NumberFormat("en-US", {
-  style: "decimal",
-});
-const asPercent = new Intl.NumberFormat("en-US", {
-  style: "percent",
-  minimumFractionDigits: 2,
-});
-const asDollar = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  currencySign: "accounting",
-});
-
-const FORMATTERS = {
-  "Billed Rev": asDollar,
-  "Active Families": asDecimal,
-  "Approved Hours": asDecimal,
-  "Hour per Client": asDecimal,
-  "Active Tutors": asDecimal,
-  "Online %": asPercent,
-  "Salaried Coach %": asPercent,
-  "SAT/ACT Hours %": asPercent,
-  "Tutor Pay Rate %": asPercent,
-  "Avg Online Bill Rate": asDollar,
-  "Avg In-Person Bill Rate": asDollar,
-  "Client Referrals": asDecimal,
-  "Contact Us Forms": asDecimal,
-  "Projects Added": asDecimal,
-  Consultations: asDecimal,
-};
-
 const ByWeek = () => {
   const [dataset, setDataset] = React.useState(weeklyData);
   const [compareYear, setCompareYear] = React.useState(COMPARE_YEARS[0]);
@@ -78,6 +48,9 @@ const ByWeek = () => {
 
   return (
     <Layout showNav={false}>
+      <header>
+        <Nav />
+      </header>
       <h1>Scorecard Overview</h1>
       <div className={styles.filters}>
         <div className={styles.filterGroup}>

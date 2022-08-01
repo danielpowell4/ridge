@@ -4,6 +4,12 @@
   margin-bottom: 1rem;
 }
 
+.filterGroup {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+}
+
 .table tr th,
 .table tr td {
   text-align: right;
