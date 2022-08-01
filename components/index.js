@@ -3,4 +3,5 @@ export { default as Nav } from "./Nav";
 
 export { default as Histogram } from "./Histogram";
 export { default as LinesTime } from "./LinesTime";
+export { default as ScattersTime } from "./ScattersTime";
 export { default as StackedBars } from "./StackedBars";

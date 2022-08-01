@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "moment": "^2.20.1",
+    "moving-averages": "^4.0.6",
     "next": "^12.1.4",
     "qs": "^6.10.3",
     "react": "^17.0.2",
