@@ -41,6 +41,7 @@ const LinesTime = ({
         theme={VictoryTheme.material}
         height={height}
         width={width}
+        padding={{ left: 90, top: 50, right: 10, bottom: 50 }}
         margin="auto"
         containerComponent={
           <VictoryVoronoiContainer
