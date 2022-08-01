@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Layout, LinesTime } from "../../components";
 import styles from "./styles.module.css";
-import { FORMATTERS, Nav } from "./_helper";
+import { FORMATTERS, Nav } from "../../lib/scorecardHelper";
 
 import weeklyData from "./weeklyData.json";
 

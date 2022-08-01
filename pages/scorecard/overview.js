@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Layout } from "../../components";
-import { FORMATTERS, asPercent, Nav } from "./_helper";
+import { FORMATTERS, asPercent, Nav } from "../../lib/scorecardHelper";
 import styles from "./styles.module.css";
 
 import weeklyData from "./weeklyData.json";
