@@ -53,7 +53,7 @@ const SeasonStrength = () => {
 
       <div className={styles.filters}>
         <div className={styles.filterGroup}>
-          Attribute
+          <label>Attribute</label>
           {ATTRIBUTES.map((attrName, attrIndex) => {
             const id = `attr${attrIndex}`;
             return (

@@ -54,7 +54,7 @@ const ByWeek = () => {
       <h1>Scorecard Overview</h1>
       <div className={styles.filters}>
         <div className={styles.filterGroup}>
-          Dataset
+          <label>Dataset</label>
           {[
             ["By Week", "weeklyData", weeklyData],
             ["SYTD", "yearlyData", yearlyData],
@@ -71,7 +71,7 @@ const ByWeek = () => {
           ))}
         </div>
         <div className={styles.filterGroup}>
-          Year Compare To
+          <label>Year Compare</label>
           {COMPARE_YEARS.map((year) => (
             <div key={year}>
               <input
