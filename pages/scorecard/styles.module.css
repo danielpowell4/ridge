@@ -1,0 +1,14 @@
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.table tr th,
+.table tr td {
+  text-align: right;
+}
+
+.activeWeek {
+  background-color: aquamarine;
+}
