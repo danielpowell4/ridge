@@ -60,9 +60,7 @@ const FORMATTERS = {
 
 const ByWeek = () => {
   const [dataset, setDataset] = React.useState(weeklyData);
-  const [compareYear, setCompareYear] = React.useState(
-    COMPARE_YEARS[COMPARE_YEARS.length - 1]
-  );
+  const [compareYear, setCompareYear] = React.useState(COMPARE_YEARS[0]);
 
   const activeWeek = dataset[dataset.length - 1];
   const activeWeekNum = activeWeek["SY Week"];
