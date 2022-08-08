@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Layout, LinesTime, ScattersTime } from "../../components";
 import styles from "./styles.module.css";
-import { FORMATTERS, Nav } from "../../lib/scorecardHelper";
+import { FORMATTERS, Nav, asPercent } from "../../lib/scorecardHelper";
 
 import weeklyData from "./weeklyData.json";
 
@@ -26,6 +26,21 @@ const ATTRIBUTES = [
 const YEARS = [2018, 2019, 2020, 2021, 2022];
 const CHART_NAMES = ["Scatter with Trend", "Line"];
 
+const SY_WEEK_MONTH_MAP = {
+  2: "July",
+  6: "Aug",
+  10: "Sept",
+  14: "Oct",
+  19: "Nov",
+  23: "Dec",
+  28: "Jan",
+  32: "Feb",
+  36: "Mar",
+  40: "April",
+  45: "May",
+  49: "June",
+};
+
 const SeasonStrength = () => {
   const [attribute, setAttribute] = React.useState(ATTRIBUTES[0]);
   const [chartName, setChartName] = React.useState(CHART_NAMES[0]);
@@ -45,6 +60,11 @@ const SeasonStrength = () => {
         y: wk[attribute],
         tip: `${year} - ${formatter.format(wk[attribute])}`,
       })),
+  }));
+
+  const yearlyTotals = chartData.map((set) => ({
+    year: set.label,
+    total: set.data.reduce((acc, item) => acc + item.y, 0),
   }));
 
   return (
@@ -105,6 +125,7 @@ const SeasonStrength = () => {
       <table>
         <thead>
           <tr>
+            <th />
             <th>Week</th>
             {YEARS.map((year) => (
               <th key={year}>{year}</th>
@@ -114,8 +135,12 @@ const SeasonStrength = () => {
         <tbody>
           {weekNumbers.map((weekNumber) => (
             <tr key={weekNumber}>
+              <td>{SY_WEEK_MONTH_MAP[weekNumber]}</td>
               <td>{weekNumber}</td>
               {YEARS.map((year) => {
+                const yearlyTotal = yearlyTotals.find(
+                  (t) => t.year === year
+                )?.total;
                 const week =
                   weeklyData.find(
                     (wk) =>
@@ -123,7 +148,11 @@ const SeasonStrength = () => {
                   ) || {};
                 const value = week[attribute];
 
-                return <td key={year}>{value}</td>;
+                return (
+                  <td key={year}>
+                    {value} ({asPercent.format(value / yearlyTotal)})
+                  </td>
+                );
               })}
             </tr>
           ))}
