@@ -1,0 +1,23 @@
+.pageContainer {
+  max-width: 880px;
+  width: 100%;
+  margin: auto;
+  padding: 1rem;
+}
+
+.filters {
+  margin-bottom: 1rem;
+}
+
+.inputContainer {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.inputContainer label {
+  flex-basis: 240px;
+}
+
+.inputContainer input {
+  flex-basis: 420px;
+}
