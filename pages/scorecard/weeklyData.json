@@ -4277,7 +4277,7 @@
     "Client Referrals": 16,
     "Contact Us Forms": 25,
     "Projects Added": 67,
-    "Consultations": 24
+    "Consultations": 25
   },
   {
     "SY Year": 2022,
@@ -4297,7 +4297,7 @@
     "Client Referrals": 18,
     "Contact Us Forms": 12,
     "Projects Added": 88,
-    "Consultations": 40
+    "Consultations": 42
   },
   {
     "SY Year": 2022,
@@ -4311,12 +4311,32 @@
     "Online %": 0.7339,
     "Salaried Coach %": 0.495,
     "SAT/ACT Hours %": 0.6441,
-    "Tutor Pay Rate %": 0.3946,
+    "Tutor Pay Rate %": 0.3953,
     "Avg Online Bill Rate": 209.77,
     "Avg In-Person Bill Rate": 225.48,
     "Client Referrals": 18,
     "Contact Us Forms": 21,
-    "Projects Added": 83,
-    "Consultations": 46
+    "Projects Added": 81,
+    "Consultations": 49
+  },
+  {
+    "SY Year": 2022,
+    "SY Week": 9,
+    "Week Starting": "2022-08-22",
+    "Billed Rev": 217343.91,
+    "Active Families": 654,
+    "Approved Hours": 940.5,
+    "Hour per Client": 1.36,
+    "Active Tutors": 150,
+    "Online %": 0.7491,
+    "Salaried Coach %": 0.5407,
+    "SAT/ACT Hours %": 0.6786,
+    "Tutor Pay Rate %": 0.3926,
+    "Avg Online Bill Rate": 211.61,
+    "Avg In-Person Bill Rate": 223.18,
+    "Client Referrals": 14,
+    "Contact Us Forms": 28,
+    "Projects Added": 117,
+    "Consultations": 53
   }
 ]
