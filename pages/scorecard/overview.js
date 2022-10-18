@@ -12,7 +12,7 @@ const COMPARE_YEARS = [2018, 2019, 2020, 2021];
 const THIS_YEAR = 2022;
 
 const ATTRIBUTE_NAMES = [
-  "Billed Rev",
+  "Billed Items",
   "Active Families",
   "Approved Hours",
   "Hour per Client",
@@ -26,11 +26,11 @@ const ATTRIBUTE_NAMES = [
   "Client Referrals",
   "Contact Us Forms",
   "Projects Added",
-  "Consultations",
+  "1st Consultations",
 ];
 
 const DETAIL_VIEWS = {
-  "Billed Rev": "/scorecard/billedItems",
+  "Billed Items": "/scorecard/billedItems",
 };
 
 const ByWeek = () => {

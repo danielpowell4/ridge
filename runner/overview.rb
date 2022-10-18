@@ -30,8 +30,11 @@ pp_client_ids = Client.where(market_id: non_ab_market_ids)
 
 pp_client_referrals = Referral.where(referred_type: 'Client', referred_id: pp_client_ids, referred_by_type: 'Client', referred_by_id: pp_client_ids)
 pp_client_projects = Project.where(service_type_id: pp_service_type_ids)
-pp_client_consults = Consultation.joins(:student).where(people: { client_id: pp_client_ids })
 pp_website_leads = ReferralType.website.referrals.where(referred_type: 'Client', referred_id: pp_client_ids)
+
+min_consult_times_by_student = Consultation.group(:student_id).select('min(starts_at) AS starts_at, student_id')
+first_consult_ids = Consultation.where("(starts_at, student_id) IN (?)", min_consult_times_by_student).select(:id)
+pp_client_first_consults = Consultation.joins(:student).where(people: { client_id: pp_client_ids }, id: first_consult_ids)
 
 # helpers
 sat_act_project_type_id = ProjectType.find_by!(name: 'SAT/ACT Prep').id
@@ -48,7 +51,7 @@ week_starts.each do |week_start|
   ].each do |label, report, range|
     puts "- " + label
     billing_records = BillingRecord.where(id: pp_billing_record_ids, created_at: range)
-    approved_lessons = Lesson.eager_load(:summary).where(id: pp_lesson_ids, lesson_summaries: { approved_on: range })
+    approved_lessons = Lesson.joins(:summary).where(id: pp_lesson_ids, lesson_summaries: { approved_on: range })
     approved_lesson_hours = approved_lessons.total_hours
 
     sat_act_approved_lessons = approved_lessons.joins(:project).where(projects: { project_type_id: sat_act_project_type_id })
@@ -83,14 +86,14 @@ week_starts.each do |week_start|
 
     client_referrals = pp_client_referrals.where(created_at: range)
     projects_added = pp_client_projects.where(created_at: range)
-    consultations = pp_client_consults.where(starts_at: range)
+    consultations = pp_client_first_consults.where(starts_at: range)
     website_leads = pp_website_leads.where(created_at: range)
 
     report << {
       'SY Year' => lookup_sy_start(week_start).year,
       'SY Week' => lookup_sy_week(week_start),
       'Week Starting' => week_start.to_date.to_s,
-      'Billed Rev' => billing_records.sum(:billed_amount).to_f,
+      'Billed Items' => billing_records.sum(:billed_amount).to_f,
       'Active Families' => active_client_ids.count,
       'Approved Hours' => approved_lesson_hours,
       'Hour per Client' => hours_per_client_avg.round(2).to_f,
@@ -104,7 +107,7 @@ week_starts.each do |week_start|
       'Client Referrals' => client_referrals.count,
       'Contact Us Forms' => website_leads.count,
       'Projects Added' => projects_added.count,
-      'Consultations' => consultations.count
+      '1st Consultations' => consultations.count
     }
   end
 end
