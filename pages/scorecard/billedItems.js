@@ -12,33 +12,34 @@ const THIS_YEAR = 2022;
 const DISPLAY_TYPES = ["Absolute", "Relative"];
 
 const ITEM_NAMES = [
-  "Billed Rev",
-  "All Lesson Rev",
-  "ServicePackagePayment Rev",
-  "All StrategySession Rev",
-  "PracticeTestResult Rev",
-  "TestRegistrationFee Rev",
-  "ManualExpense Rev",
-  "MaterialRequest Rev",
+  "All Items",
+  "All Lessons",
+  "Packages",
+  "All Strategy Sessions",
+  "Practice Tests",
+  "Test Fees",
+  "Curriculum Fees",
+  "Class Payments",
+  "Misc Billing",
 ];
 
 const LESSON_TYPE_NAMES = [
-  "All Lesson Rev",
-  "SAT/ACT Prep Lesson Rev",
-  "Admissions Consulting Lesson Rev",
-  "Subject Tutoring Lesson Rev",
-  "Executive Functioning/Academic Skills Lesson Rev",
-  "SSAP Prep Lesson Rev",
-  "Graduate Level Test Prep Lesson Rev",
-  "Other Lesson Rev",
-  "The Coding Space Lesson Rev",
-  "Camp Program Lesson Rev",
+  "All Lessons",
+  "Subject Tutoring Lessons",
+  "SAT/ACT Prep Lessons",
+  "SSAP Prep Lessons",
+  "Admissions Consulting Lessons",
+  "Executive Functioning/Academic Skills Lessons",
+  "Graduate Level Test Prep Lessons",
+  "Other Lessons",
+  "The Coding Space Lessons",
+  "Camp Program Lessons",
 ];
 
 const SESSION_TYPE_NAMES = [
-  "All StrategySession Rev",
-  "Admissions StrategySession Rev",
-  "Executive Functioning StrategySession Rev",
+  "All Strategy Sessions",
+  "Admissions Strategy Sessions",
+  "Executive Functioning Strategy Sessions",
 ];
 
 const DataTable = ({

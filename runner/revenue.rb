@@ -25,7 +25,19 @@ non_ab_market_ids = Market.where.not(name: 'ArborBridge').select(:id)
 pp_billing_record_ids = BillingRecord.where(market_id: non_ab_market_ids).select(:id)
 pp_lesson_ids = Lesson.not_deleted.joins(project: { students: :client }).where(clients: { market_id: non_ab_market_ids })
 
-billing_item_types = %w[Lesson StrategySession ServicePackagePayment PracticeTestResult TestRegistrationFee ManualExpense MaterialRequest]
+invoiced_packages = BillingRecord.where(item_type: 'ServicePackagePayment')
+class_package_payments = ServicePackagePayment.where.not(id: invoiced_packages.select(:item_id)).where(promotion: false)
+tpc_class_payment_ids = class_package_payments.joins(purchased_service_package: :service_package).where(service_packages: { service_type_id: ServiceType.test_prep_courses.id }).select(:id)
+
+billing_item_types = [
+  ['Lessons', ['Lesson']],
+  ['Packages', ['ServicePackagePayment']],
+  ['Strategy Sessions', ['StrategySession']],
+  ['Practice Tests', ['PracticeTestResult', 'PracticeTestRegistration']],
+  ['Test Fees', ['TestRegistrationFee']],
+  ['Curriculum Fees', ['MaterialRequest']],
+  ['Misc Billing', ['ManualExpense']]
+]
 
 weekly_report = []
 sytd_report = []
@@ -38,33 +50,34 @@ week_starts.each do |week_start|
   ].each do |label, report, range|
     puts "- " + label
     billing_records = BillingRecord.where(id: pp_billing_record_ids, created_at: range)
-    approved_lessons = Lesson.eager_load(:summary).where(id: pp_lesson_ids, lesson_summaries: { approved_on: range })
-    approved_lesson_hours = approved_lessons.total_hours
+    class_payments = ServicePackagePayment.where(id: tpc_class_payment_ids, due_at: range)
 
     row = {
       'SY Year' => lookup_sy_start(week_start).year,
       'SY Week' => lookup_sy_week(week_start),
       'Week Starting' => week_start.to_date.to_s,
-      'Billed Rev' => billing_records.sum(:billed_amount).to_f
+      'Class Payments' => class_payments.sum(:amount).to_f
     }
 
-    billing_item_types.each do |item_type|
-      if item_type == 'Lesson'
-        row["All #{item_type} Rev"] = billing_records.where(item_type: item_type).sum(:billed_amount).to_f
+    row['All Items'] = billing_records.sum(:billed_amount).to_f + row['Class Payments']
+
+    billing_item_types.each do |label, item_types|
+      if label == 'Lessons'
+        row["All #{label}"] = billing_records.where(item_type: item_types).sum(:billed_amount).to_f
 
         ProjectType.order(:id).each do |project_type|
           project_type_lesson_ids = Lesson.joins(:project).where(projects: { project_type_id: project_type.id }).select(:id)
-          row["#{project_type.name} #{item_type} Rev"] = billing_records.where(item_type: item_type, item_id: project_type_lesson_ids).sum(:billed_amount).to_f
+          row["#{project_type.name} #{label}"] = billing_records.where(item_type: item_types, item_id: project_type_lesson_ids).sum(:billed_amount).to_f
         end
-      elsif item_type == 'StrategySession'
-        row["All #{item_type} Rev"] = billing_records.where(item_type: item_type).sum(:billed_amount).to_f
+      elsif label == 'Strategy Sessions'
+        row["All #{label}"] = billing_records.where(item_type: item_types).sum(:billed_amount).to_f
 
         ServiceType.where.not(strategy_session_stat_j: nil).order(:id).each do |service_type|
           service_strategy_session_ids = StrategySession.where(service_type_id: service_type.id).select(:id)
-          row["#{service_type.name} StrategySession Rev"] =  billing_records.where(item_type: item_type, item_id: service_strategy_session_ids).sum(:billed_amount).to_f
+          row["#{service_type.name} #{label}"] =  billing_records.where(item_type: item_types, item_id: service_strategy_session_ids).sum(:billed_amount).to_f
         end
       else
-        row["#{item_type} Rev"] = billing_records.where(item_type: item_type).sum(:billed_amount).to_f
+        row[label] = billing_records.where(item_type: item_types).sum(:billed_amount).to_f
       end
     end
 
