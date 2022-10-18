@@ -6,7 +6,7 @@ import { FORMATTERS, Nav, asPercent } from "../../lib/scorecardHelper";
 import weeklyData from "./weeklyData.json";
 
 const ATTRIBUTES = [
-  "Billed Rev",
+  "Billed Items",
   "Active Families",
   "Approved Hours",
   "Hour per Client",
@@ -20,7 +20,7 @@ const ATTRIBUTES = [
   "Client Referrals",
   "Contact Us Forms",
   "Projects Added",
-  "Consultations",
+  "1st Consultations",
 ];
 
 const YEARS = [2018, 2019, 2020, 2021, 2022];
