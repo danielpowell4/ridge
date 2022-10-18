@@ -8,7 +8,7 @@ import weeklyData from "./weeklyData.json";
 import yearlyData from "./yearlyData.json";
 
 const WEEKS_HELPER = [3, 2, 1];
-const COMPARE_YEARS = [2021, 2020, 2019, 2018];
+const COMPARE_YEARS = [2018, 2019, 2020, 2021];
 const THIS_YEAR = 2022;
 
 const ATTRIBUTE_NAMES = [
@@ -35,7 +35,9 @@ const DETAIL_VIEWS = {
 
 const ByWeek = () => {
   const [dataset, setDataset] = React.useState(weeklyData);
-  const [compareYear, setCompareYear] = React.useState(COMPARE_YEARS[0]);
+  const [compareYear, setCompareYear] = React.useState(
+    COMPARE_YEARS[COMPARE_YEARS.length - 1]
+  );
 
   const activeWeek = dataset[dataset.length - 1];
   const activeWeekNum = activeWeek["SY Week"];
@@ -94,15 +96,15 @@ const ByWeek = () => {
         <thead>
           <tr>
             <td>Attribute</td>
-            {recentWeeks.map((week, weekIndex) => (
-              <td key={weekIndex}>
-                Wk {week["SY Week"]} - {THIS_YEAR}
-              </td>
-            ))}
-            <td />
             {lastYearWeeks.map((week, weekIndex) => (
               <td key={weekIndex}>
                 Wk {week["SY Week"]} - {compareYear}
+              </td>
+            ))}
+            <td />
+            {recentWeeks.map((week, weekIndex) => (
+              <td key={weekIndex}>
+                Wk {week["SY Week"]} - {THIS_YEAR}
               </td>
             ))}
             <td />
@@ -127,18 +129,19 @@ const ByWeek = () => {
                     attr
                   )}
                 </td>
-                {recentWeeks.map((week, weekIndex) => (
+                {lastYearWeeks.map((week, weekIndex) => (
                   <td
                     key={weekIndex}
                     className={
-                      week["SY Week"] == activeWeekNum && styles.activeWeek
+                      week["SY Week"] == activeWeekNum &&
+                      styles.activeLastYearWeek
                     }
                   >
                     {formatter.format(week[attr])}
                   </td>
                 ))}
                 <td></td>
-                {lastYearWeeks.map((week, weekIndex) => (
+                {recentWeeks.map((week, weekIndex) => (
                   <td
                     key={weekIndex}
                     className={
