@@ -2,6 +2,7 @@ import * as React from "react";
 import { Layout } from "../../components";
 import { FORMATTERS, asPercent, Nav } from "../../lib/scorecardHelper";
 import styles from "./styles.module.css";
+import Link from "next/link";
 
 import weeklyData from "./weeklyData.json";
 import yearlyData from "./yearlyData.json";
@@ -27,6 +28,10 @@ const ATTRIBUTE_NAMES = [
   "Projects Added",
   "Consultations",
 ];
+
+const DETAIL_VIEWS = {
+  "Billed Rev": "/scorecard/billedItems",
+};
 
 const ByWeek = () => {
   const [dataset, setDataset] = React.useState(weeklyData);
@@ -109,10 +114,19 @@ const ByWeek = () => {
         <tbody>
           {ATTRIBUTE_NAMES.map((attr) => {
             const formatter = FORMATTERS[attr];
+            const detailPath = DETAIL_VIEWS[attr];
 
             return (
               <tr key={attr}>
-                <td>{attr}</td>
+                <td>
+                  {detailPath ? (
+                    <Link href={detailPath}>
+                      <a>{attr}</a>
+                    </Link>
+                  ) : (
+                    attr
+                  )}
+                </td>
                 {recentWeeks.map((week, weekIndex) => (
                   <td
                     key={weekIndex}
