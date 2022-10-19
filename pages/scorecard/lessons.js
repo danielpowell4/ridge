@@ -1,47 +1,36 @@
 import * as React from "react";
 import { Layout } from "../../components";
-import { Nav, DataTable, asDollar } from "../../lib/scorecardHelper";
+import { Nav, DataTable, asDecimal } from "../../lib/scorecardHelper";
 import styles from "./styles.module.css";
 
-import weeklyData from "./weeklyBilledItems.json";
-import yearlyData from "./yearlyBilledItems.json";
+import weeklyData from "./weeklyLessons.json";
+import yearlyData from "./yearlyLessons.json";
 
 const WEEKS_HELPER = [3, 2, 1];
 const COMPARE_YEARS = [2018, 2019, 2020, 2021];
 const DISPLAY_TYPES = ["Absolute", "Relative"];
 
-const ITEM_NAMES = [
-  "All Items",
-  "All Lessons",
-  "Packages",
-  "All Strategy Sessions",
-  "Practice Tests",
-  "Test Fees",
-  "Curriculum Fees",
-  "Class Payments",
-  "Misc Billing",
-];
-
 const LESSON_TYPE_NAMES = [
-  "All Lessons",
-  "Subject Tutoring Lessons",
-  "SAT/ACT Prep Lessons",
-  "SSAP Prep Lessons",
-  "Admissions Consulting Lessons",
-  "Executive Functioning/Academic Skills Lessons",
-  "Graduate Level Test Prep Lessons",
-  "Other Lessons",
-  "The Coding Space Lessons",
-  "Camp Program Lessons",
+  "Approved Hours",
+  "Subject Tutoring Hours",
+  "SAT/ACT Prep Hours",
+  "SSAP Prep Hours",
+  "Admissions Consulting Hours",
+  "Executive Functioning/Academic Skills Hours",
+  "Graduate Level Test Prep Hours",
+  "Camp Program Hours",
+  "The Coding Space Hours",
+  "Other Hours",
 ];
 
-const SESSION_TYPE_NAMES = [
-  "All Strategy Sessions",
-  "Admissions Strategy Sessions",
-  "Executive Functioning Strategy Sessions",
+const LOCATION_TYPE_NAMES = [
+  "Approved Hours",
+  "Online Hours",
+  "At Client Hours",
+  "PP Office Hours",
 ];
 
-const BilledItems = () => {
+const Lessons = () => {
   const [dataset, setDataset] = React.useState(weeklyData);
   const [compareYear, setCompareYear] = React.useState(
     COMPARE_YEARS[COMPARE_YEARS.length - 1]
@@ -67,11 +56,11 @@ const BilledItems = () => {
       <header>
         <Nav />
       </header>
-      <h1>Billed Items</h1>
+      <h1>Lesson Hours</h1>
       <p>
         <em>
-          This includes items billed for the stated week. It does{" "}
-          <strong>not</strong> include revenue earned from packages.
+          This includes approved lessons hours that were billed hourly, applied
+          against a pre-paid package or charged at a $0/hr rate.
         </em>
       </p>
       <div className={styles.filters}>
@@ -122,17 +111,6 @@ const BilledItems = () => {
         </div>
       </div>
 
-      <h2>By Item Type</h2>
-      <DataTable
-        recentWeeks={recentWeeks}
-        lastYearWeeks={lastYearWeeks}
-        activeWeekNum={activeWeekNum}
-        compareYear={compareYear}
-        displayType={displayType}
-        absoluteFormatter={asDollar}
-        attributes={ITEM_NAMES}
-      />
-
       <h2>Lessons by Project Type</h2>
       <DataTable
         recentWeeks={recentWeeks}
@@ -140,22 +118,22 @@ const BilledItems = () => {
         activeWeekNum={activeWeekNum}
         compareYear={compareYear}
         displayType={displayType}
-        absoluteFormatter={asDollar}
+        absoluteFormatter={asDecimal}
         attributes={LESSON_TYPE_NAMES}
       />
 
-      <h2>Strategy Sessions by Service</h2>
+      <h2>Lessons by Location Category</h2>
       <DataTable
         recentWeeks={recentWeeks}
         lastYearWeeks={lastYearWeeks}
         activeWeekNum={activeWeekNum}
         compareYear={compareYear}
         displayType={displayType}
-        absoluteFormatter={asDollar}
-        attributes={SESSION_TYPE_NAMES}
+        absoluteFormatter={asDecimal}
+        attributes={LOCATION_TYPE_NAMES}
       />
     </Layout>
   );
 };
 
-export default BilledItems;
+export default Lessons;

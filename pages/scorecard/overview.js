@@ -31,6 +31,8 @@ const ATTRIBUTE_NAMES = [
 
 const DETAIL_VIEWS = {
   "Billed Items": "/scorecard/billedItems",
+  "Approved Hours": "/scorecard/lessons",
+  "1st Consultations": "/scorecard/consultations",
 };
 
 const ByWeek = () => {

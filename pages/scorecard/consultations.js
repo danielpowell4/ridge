@@ -1,47 +1,29 @@
 import * as React from "react";
 import { Layout } from "../../components";
-import { Nav, DataTable, asDollar } from "../../lib/scorecardHelper";
+import { Nav, DataTable, asDecimal } from "../../lib/scorecardHelper";
 import styles from "./styles.module.css";
 
-import weeklyData from "./weeklyBilledItems.json";
-import yearlyData from "./yearlyBilledItems.json";
+import weeklyData from "./weeklyConsultations.json";
+import yearlyData from "./yearlyConsultations.json";
 
 const WEEKS_HELPER = [3, 2, 1];
 const COMPARE_YEARS = [2018, 2019, 2020, 2021];
 const DISPLAY_TYPES = ["Absolute", "Relative"];
 
-const ITEM_NAMES = [
-  "All Items",
-  "All Lessons",
-  "Packages",
-  "All Strategy Sessions",
-  "Practice Tests",
-  "Test Fees",
-  "Curriculum Fees",
-  "Class Payments",
-  "Misc Billing",
+const PROJECT_TYPE_NAMES = [
+  "1st Consultations",
+  "Subject Tutoring",
+  "SAT/ACT Prep",
+  "SSAP Prep",
+  "Admissions Consulting",
+  "Executive Functioning/Academic Skills",
+  "Graduate Level Test Prep",
+  "Camp Program",
+  "The Coding Space",
+  "Other",
 ];
 
-const LESSON_TYPE_NAMES = [
-  "All Lessons",
-  "Subject Tutoring Lessons",
-  "SAT/ACT Prep Lessons",
-  "SSAP Prep Lessons",
-  "Admissions Consulting Lessons",
-  "Executive Functioning/Academic Skills Lessons",
-  "Graduate Level Test Prep Lessons",
-  "Other Lessons",
-  "The Coding Space Lessons",
-  "Camp Program Lessons",
-];
-
-const SESSION_TYPE_NAMES = [
-  "All Strategy Sessions",
-  "Admissions Strategy Sessions",
-  "Executive Functioning Strategy Sessions",
-];
-
-const BilledItems = () => {
+const Consultations = () => {
   const [dataset, setDataset] = React.useState(weeklyData);
   const [compareYear, setCompareYear] = React.useState(
     COMPARE_YEARS[COMPARE_YEARS.length - 1]
@@ -67,11 +49,10 @@ const BilledItems = () => {
       <header>
         <Nav />
       </header>
-      <h1>Billed Items</h1>
+      <h1>Consultations</h1>
       <p>
         <em>
-          This includes items billed for the stated week. It does{" "}
-          <strong>not</strong> include revenue earned from packages.
+          This includes the only first scheduled consultation for a student.
         </em>
       </p>
       <div className={styles.filters}>
@@ -122,40 +103,18 @@ const BilledItems = () => {
         </div>
       </div>
 
-      <h2>By Item Type</h2>
+      <h2>Consultations by Project Type</h2>
       <DataTable
         recentWeeks={recentWeeks}
         lastYearWeeks={lastYearWeeks}
         activeWeekNum={activeWeekNum}
         compareYear={compareYear}
         displayType={displayType}
-        absoluteFormatter={asDollar}
-        attributes={ITEM_NAMES}
-      />
-
-      <h2>Lessons by Project Type</h2>
-      <DataTable
-        recentWeeks={recentWeeks}
-        lastYearWeeks={lastYearWeeks}
-        activeWeekNum={activeWeekNum}
-        compareYear={compareYear}
-        displayType={displayType}
-        absoluteFormatter={asDollar}
-        attributes={LESSON_TYPE_NAMES}
-      />
-
-      <h2>Strategy Sessions by Service</h2>
-      <DataTable
-        recentWeeks={recentWeeks}
-        lastYearWeeks={lastYearWeeks}
-        activeWeekNum={activeWeekNum}
-        compareYear={compareYear}
-        displayType={displayType}
-        absoluteFormatter={asDollar}
-        attributes={SESSION_TYPE_NAMES}
+        absoluteFormatter={asDecimal}
+        attributes={PROJECT_TYPE_NAMES}
       />
     </Layout>
   );
 };
 
-export default BilledItems;
+export default Consultations;
