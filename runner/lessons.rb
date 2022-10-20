@@ -25,8 +25,9 @@ pp_lesson_ids = Lesson.not_deleted.joins(:project).where(projects: { service_typ
 weekly_report = []
 sytd_report = []
 
-week_starts.each do |week_start|
-  puts "week_starting: #{week_start.to_s}"
+week_starts.each do |start_date|
+  puts "week_starting: #{start_date.to_s}"
+  week_start = start_date.beginning_of_week # ensures date time
   [
     ['Weekly', weekly_report, week_start.all_week],
     ['SYTD', sytd_report, lookup_sy_start(week_start)..week_start.end_of_week]

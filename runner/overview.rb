@@ -14,7 +14,7 @@ def lookup_sy_start(time)
   sy_start
 end
 
-start_date = 4.weeks.ago.beginning_of_week.to_date # Time.zone.local(2018, 7, 2).to_date # start of SY18
+start_date =Time.zone.local(2018, 7, 2).to_date # start of SY18 4.weeks.ago.beginning_of_week.to_date #
 end_date = 1.week.ago.beginning_of_week.to_date
 
 week_starts = (start_date..end_date).select { |date| date == date.beginning_of_week.to_date }
@@ -43,8 +43,9 @@ online_lesson_cat = LessonLocationCategory.find_by!(name: 'Online')
 weekly_report = []
 sytd_report = []
 
-week_starts.each do |week_start|
-  puts "week_starting: #{week_start.to_s}"
+week_starts.each do |start_date|
+  puts "week_starting: #{start_date.to_s}"
+  week_start = start_date.beginning_of_week # ensures date time
   [
     ['Weekly', weekly_report, week_start.all_week],
     ['SYTD', sytd_report, lookup_sy_start(week_start)..week_start.end_of_week]
