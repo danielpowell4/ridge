@@ -8,7 +8,8 @@ def lookup_sy_week(date_or_datetime)
   weeks_since_start.to_i + week_offset
 end
 
-def lookup_sy_start(time)
+def lookup_sy_start(date_or_datetime)
+  time = date_or_datetime.beginning_of_day
   sy_start = Time.zone.local(time.year, 7)
   sy_start -= 1.year if sy_start > time
   sy_start
