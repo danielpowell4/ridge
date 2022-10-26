@@ -15,16 +15,14 @@ def lookup_sy_start(date_or_datetime)
   sy_start
 end
 
-start_date = 4.weeks.ago.beginning_of_week.to_date # Time.zone.local(2018, 7, 2).to_date # start of SY18
+start_date = Time.zone.local(2018, 7, 2).to_date # start of SY18
 end_date = 1.week.ago.beginning_of_week.to_date
 
 week_starts = (start_date..end_date).select { |date| date == date.beginning_of_week.to_date }
 
-non_ab_market_ids = Market.where.not(name: 'ArborBridge').select(:id)
-
 # limits
-pp_billing_record_ids = BillingRecord.where(market_id: non_ab_market_ids).select(:id)
-pp_lesson_ids = Lesson.not_deleted.joins(project: { students: :client }).where(clients: { market_id: non_ab_market_ids })
+pp_profiles = BillingProfile.joins(:client_type_assignment).where(client_type_assignments: { client_type_id: ClientType.private_prep.id })
+pp_billing_record_ids = BillingRecord.where(billing_profile_id: pp_profiles.select(:id)).select(:id)
 
 invoiced_packages = BillingRecord.where(item_type: 'ServicePackagePayment')
 class_package_payments = ServicePackagePayment.where.not(id: invoiced_packages.select(:item_id)).where(promotion: false)
