@@ -3,9 +3,8 @@ def lookup_sy_week(date_or_datetime)
   sy_start = lookup_sy_start(time)
 
   weeks_since_start = (time.beginning_of_week - sy_start.beginning_of_week) / 1.week
-  week_offset = 1 # first week 1, not 0
 
-  weeks_since_start.to_i + week_offset
+  weeks_since_start.to_i + 1 # first week 1, not 0
 end
 
 def lookup_sy_start(date_or_datetime)
@@ -15,12 +14,12 @@ def lookup_sy_start(date_or_datetime)
   sy_start
 end
 
-start_date = 4.weeks.ago.beginning_of_week.to_date # Time.zone.local(2018, 7, 2).to_date # start of SY18
+start_date = Time.zone.local(2018, 7, 2).to_date # start of SY18 4.weeks.ago.beginning_of_week.to_date #
 end_date = 1.week.ago.beginning_of_week.to_date
 
 week_starts = (start_date..end_date).select { |date| date == date.beginning_of_week.to_date }
 
-pp_service_type_ids = ServiceType.where(client_type: ClientType.private_prep).select(:id)
+pp_service_type_ids = ClientType.private_prep.service_type_ids
 pp_lesson_ids = Lesson.not_deleted.joins(:project).where(projects: { service_type_id: pp_service_type_ids })
 
 weekly_report = []
@@ -28,7 +27,7 @@ sytd_report = []
 
 week_starts.each do |start_date|
   puts "week_starting: #{start_date.to_s}"
-  week_start = start_date.beginning_of_week # ensures date time
+  week_start = start_date.beginning_of_day # ensures date time
   [
     ['Weekly', weekly_report, week_start.all_week],
     ['SYTD', sytd_report, lookup_sy_start(week_start)..week_start.end_of_week]
