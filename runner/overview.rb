@@ -15,19 +15,25 @@ def lookup_sy_start(date_or_datetime)
   sy_start
 end
 
-start_date = Time.zone.local(2018, 7, 2).to_date # start of SY18 4.weeks.ago.beginning_of_week.to_date #
+start_date = 4.weeks.ago.beginning_of_week.to_date # Time.zone.local(2018, 7, 2).to_date # start of SY18
 end_date = 1.week.ago.beginning_of_week.to_date
 
 week_starts = (start_date..end_date).select { |date| date == date.beginning_of_week.to_date }
 
-non_ab_market_ids = Market.where.not(name: 'ArborBridge').select(:id)
 pp_service_type_ids = ServiceType.where(client_type: ClientType.private_prep).select(:id)
+pp_project_ids = Project.where(service_type_id: pp_service_type_ids).select(:id)
 proxy_ss_lesson_ids = LessonSubjectsLesson.joins(:lesson_subject).where("lesson_subjects.name LIKE '%Strategy Session%'").select(:lesson_id)
 
 # limits
-pp_billing_record_ids = BillingRecord.where(market_id: non_ab_market_ids).select(:id)
-pp_lesson_ids = Lesson.not_deleted.joins(project: { students: :client }).where(clients: { market_id: non_ab_market_ids })
-pp_client_ids = Client.where(market_id: non_ab_market_ids)
+pp_client_type_assignments = ClientTypeAssignment.where(client_type_id: ClientType.private_prep.id)
+pp_billing_profile_ids = BillingProfile.where(client_type_assignment_id: pp_client_type_assignments.select(:id)).select(:id)
+pp_billing_record_ids = BillingRecord.where(billing_profile_id: pp_billing_profile_ids).select(:id)
+pp_client_ids = Client.where(id: pp_client_type_assignments.select(:client_id)).select(:id)
+
+complete_sign_ups = ClassSignup.where(enrollment_type: %w[all trial_class]).where.not(completed_at: nil)
+invoiced_packages = BillingRecord.where(item_type: 'ServicePackagePayment')
+class_package_payments = ServicePackagePayment.where.not(id: invoiced_packages.select(:item_id)).where(promotion: false)
+tpc_class_payment_ids = class_package_payments.joins(purchased_service_package: :service_package).where(purchased_service_packages: { id: complete_sign_ups.select(:purchased_service_package_id) }, service_packages: { service_type_id: ServiceType.test_prep_courses.id }).select(:id)
 
 pp_client_referrals = Referral.where(referred_type: 'Client', referred_id: pp_client_ids, referred_by_type: 'Client', referred_by_id: pp_client_ids)
 pp_client_projects = Project.where(service_type_id: pp_service_type_ids)
@@ -53,7 +59,8 @@ week_starts.each do |start_date|
   ].each do |label, report, range|
     puts "- " + label
     billing_records = BillingRecord.where(id: pp_billing_record_ids, created_at: range)
-    approved_lessons = Lesson.joins(:summary).where(id: pp_lesson_ids, lesson_summaries: { approved_on: range })
+    class_payments = ServicePackagePayment.where(id: tpc_class_payment_ids, due_at: range)
+    approved_lessons = Lesson.joins(:summary).where(project_id: pp_project_ids, lesson_summaries: { approved_on: range })
     approved_lesson_hours = approved_lessons.total_hours
 
     sat_act_approved_lessons = approved_lessons.joins(:project).where(projects: { project_type_id: sat_act_project_type_id })
@@ -95,7 +102,7 @@ week_starts.each do |start_date|
       'SY Year' => lookup_sy_start(week_start).year,
       'SY Week' => lookup_sy_week(week_start),
       'Week Starting' => week_start.to_date.to_s,
-      'Billed Items' => billing_records.sum(:billed_amount).to_f,
+      'Billed Items' => billing_records.sum(:billed_amount).to_f + class_payments.sum(:amount).to_f,
       'Active Families' => active_client_ids.count,
       'Approved Hours' => approved_lesson_hours,
       'Hour per Client' => hours_per_client_avg.round(2).to_f,
