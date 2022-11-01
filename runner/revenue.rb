@@ -24,8 +24,9 @@ week_starts = (start_date..end_date).select { |date| date == date.beginning_of_w
 pp_profiles = BillingProfile.joins(:client_type_assignment).where(client_type_assignments: { client_type_id: ClientType.private_prep.id })
 pp_billing_record_ids = BillingRecord.where(billing_profile_id: pp_profiles.select(:id)).select(:id)
 
-invoiced_packages = BillingRecord.where(item_type: 'ServicePackagePayment')
-class_package_payments = ServicePackagePayment.where.not(id: invoiced_packages.select(:item_id)).where(promotion: false)
+invoiced_package_payment_ids = BillingRecord.where(item_type: 'ServicePackagePayment').select(:item_id)
+# stripe charge ID populated in payment fulfillment form via mark_billed!
+class_package_payments = ServicePackagePayment.where.not(id: invoiced_package_payment_ids).where.not(stripe_charge_id: nil)
 tpc_class_payment_ids = class_package_payments.joins(purchased_service_package: :service_package).where(service_packages: { service_type_id: ServiceType.test_prep_courses.id }).select(:id)
 
 billing_item_types = [

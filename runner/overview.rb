@@ -30,10 +30,10 @@ pp_billing_profile_ids = BillingProfile.where(client_type_assignment_id: pp_clie
 pp_billing_record_ids = BillingRecord.where(billing_profile_id: pp_billing_profile_ids).select(:id)
 pp_client_ids = Client.where(id: pp_client_type_assignments.select(:client_id)).select(:id)
 
-complete_sign_ups = ClassSignup.where(enrollment_type: %w[all trial_class]).where.not(completed_at: nil)
-invoiced_packages = BillingRecord.where(item_type: 'ServicePackagePayment')
-class_package_payments = ServicePackagePayment.where.not(id: invoiced_packages.select(:item_id)).where(promotion: false)
-tpc_class_payment_ids = class_package_payments.joins(purchased_service_package: :service_package).where(purchased_service_packages: { id: complete_sign_ups.select(:purchased_service_package_id) }, service_packages: { service_type_id: ServiceType.test_prep_courses.id }).select(:id)
+invoiced_package_payment_ids = BillingRecord.where(item_type: 'ServicePackagePayment').select(:item_id)
+# stripe charge ID populated in payment fulfillment form via mark_billed!
+class_package_payments = ServicePackagePayment.where.not(id: invoiced_package_payment_ids).where.not(stripe_charge_id: nil)
+tpc_class_payment_ids = class_package_payments.joins(purchased_service_package: :service_package).where(service_packages: { service_type_id: ServiceType.test_prep_courses.id }).select(:id)
 
 pp_client_referrals = Referral.where(referred_type: 'Client', referred_id: pp_client_ids, referred_by_type: 'Client', referred_by_id: pp_client_ids)
 pp_client_projects = Project.where(service_type_id: pp_service_type_ids)
