@@ -9,14 +9,14 @@ const data = weeklyLessons.map((d, index) => ({ ...d, index }));
 const ATTRIBUTES = ["Approved Hours"];
 const PAST_YEARS = [2018, 2020, 2021];
 const DISPLAY_YEARS = [2018, 2020, 2021, "Average"];
-const CURRENT_YEAR = [2022];
+const CURRENT_YEAR = 2022;
 
 const AVERAGE_MAP = {
   simple: (values) => ma(values, 3),
+  weighted: (values) => wma(values, 3),
   dynamic: (values) => dma(values, 0.5),
   exp: (values) => ema(values, 3),
   smoothed: (values) => sma(values, 5, 2),
-  weighted: (values) => wma(values, 3),
 };
 
 const YEAR_WEIGHTS = {
@@ -26,7 +26,7 @@ const YEAR_WEIGHTS = {
   2021: 1,
 };
 
-const SKIP_WEEKS = [26, 27, 28, 29, 30];
+const SKIP_WEEKS = [26, 27, 28, 29, 30, 35];
 
 const SY_WEEK_MONTH_MAP = {
   2: "July",
@@ -225,6 +225,8 @@ const HoursBarometer = () => {
 
   const dataset = [...augData, ...compositeData];
 
+  let forecasts = [];
+
   return (
     <Layout showNav={false}>
       <h1>By Week</h1>
@@ -250,30 +252,70 @@ const HoursBarometer = () => {
           <tr>
             <th />
             <th>Week</th>
-            {DISPLAY_YEARS.map((year) => (
+            {PAST_YEARS.map((year) => (
               <th key={year}>{year}</th>
             ))}
+            <th>Weighted Avg</th>
+            <th>2022 Actual</th>
+            <th>2022 Backtrack</th>
           </tr>
         </thead>
         <tbody>
-          {weekNumbers.map((weekNumber) => (
-            <tr key={weekNumber}>
-              <td>{SY_WEEK_MONTH_MAP[weekNumber] || "-"}</td>
-              <td>{weekNumber}</td>
-              {DISPLAY_YEARS.map((year) => {
-                const week =
-                  dataset.find(
-                    (wk) =>
-                      wk["SY Year"] === year && wk["SY Week"] === weekNumber
-                  ) || {};
+          {weekNumbers.map((weekNumber) => {
+            const currentYearWeek =
+              dataset.find(
+                (wk) =>
+                  wk["SY Year"] === CURRENT_YEAR && wk["SY Week"] === weekNumber
+              ) || {};
+            const compositeWk =
+              dataset.find(
+                (wk) =>
+                  wk["SY Year"] === "Average" && wk["SY Week"] === weekNumber
+              ) || {};
+            const weekForecast = currentYearWeek[attribute] / compositeWk.avg;
 
-                const avg = week.avg;
+            if (!Number.isNaN(weekForecast)) {
+              forecasts.push(weekForecast);
+            }
 
-                // return <td key={year}>{asPercent.format(avg)}</td>;
-                return <td key={year}>{avg?.toFixed(5)}</td>;
-              })}
-            </tr>
-          ))}
+            return (
+              <tr key={weekNumber}>
+                <td>{SY_WEEK_MONTH_MAP[weekNumber] || "-"}</td>
+                <td>{weekNumber}</td>
+                {DISPLAY_YEARS.map((year) => {
+                  const week =
+                    dataset.find(
+                      (wk) =>
+                        wk["SY Year"] === year && wk["SY Week"] === weekNumber
+                    ) || {};
+
+                  const avg = week.avg;
+
+                  // return <td key={year}>{asPercent.format(avg)}</td>;
+                  return <td key={year}>{avg?.toFixed(5)}</td>;
+                })}
+                <td>{currentYearWeek[attribute] || "-"}</td>
+                <td>
+                  {currentYearWeek[attribute] ? weekForecast.toFixed(5) : "-"}
+                </td>
+              </tr>
+            );
+          })}
+          <tr>
+            <td />
+            <td />
+            {DISPLAY_YEARS.map((year) => (
+              <td key={year} />
+            ))}
+            <td />
+            <td>
+              {`Avg SYTD `}
+              {(
+                forecasts.reduce((acc, item) => acc + item, 0) /
+                forecasts.length
+              ).toFixed()}
+            </td>
+          </tr>
         </tbody>
       </table>
     </Layout>
