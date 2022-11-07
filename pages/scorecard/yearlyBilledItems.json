@@ -5648,5 +5648,30 @@
     "Test Fees": 4275.0,
     "Curriculum Fees": 138400.0,
     "Misc Billing": 31516.04
+  },
+  {
+    "SY Year": 2022,
+    "SY Week": 19,
+    "Week Starting": "2022-10-31",
+    "Class Payments": 18930.0,
+    "All Items": 4224390.38,
+    "All Lessons": 3618169.55,
+    "Subject Tutoring Lessons": 462668.32,
+    "SAT/ACT Prep Lessons": 2299328.05,
+    "SSAP Prep Lessons": 228063.72,
+    "Admissions Consulting Lessons": 491915.98,
+    "Executive Functioning/Academic Skills Lessons": 79513.99,
+    "Graduate Level Test Prep Lessons": 7300.62,
+    "Other Lessons": 2710.87,
+    "The Coding Space Lessons": 18508.0,
+    "Camp Program Lessons": 28160.0,
+    "Packages": 188104.0,
+    "All Strategy Sessions": 78089.0,
+    "Admissions Strategy Sessions": 65901.0,
+    "Executive Functioning Strategy Sessions": 12188.0,
+    "Practice Tests": 141155.0,
+    "Test Fees": 4425.0,
+    "Curriculum Fees": 143100.0,
+    "Misc Billing": 32417.83
   }
 ]
