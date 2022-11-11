@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Layout } from "../../components";
 import weeklyLessons from "./lessonHoursByType.json";
-import { asPercent } from "../../lib/scorecardHelper";
+import { asDecimal } from "../../lib/scorecardHelper";
 import { ma, dma, ema, sma, wma } from "moving-averages";
 
 const data = weeklyLessons.map((d, index) => ({ ...d, index }));
@@ -26,15 +26,15 @@ const AVERAGE_MAP = {
 };
 
 const YEAR_WEIGHTS = {
-  2017: 1,
-  2018: 3,
+  2017: 2,
+  2018: 4,
   2019: 0, // ignored for ... COVID
   2020: 1,
   2021: 1,
 };
 
 const SKIP_WEEKS = {
-  "Approved Hours": [26, 27, 28, 29, 30, 35],
+  "Approved Hours": [22, 23, 26, 27, 28, 29, 30, 35],
   "SAT/ACT Prep": [26, 27, 28, 29, 30, 35],
   "SSAP Prep": [26, 27],
   "Admissions Consulting": [],
@@ -224,7 +224,7 @@ const HoursBarometer = () => {
         const weight = YEAR_WEIGHTS[week["SY Year"]];
         const syPerc = week.avg;
         const pointWeight = syPerc * weight;
-        if (!Number.isNaN(pointWeight)) {
+        if (!Number.isNaN(pointWeight) && pointWeight !== 0) {
           divideBy += weight;
           runningTotal += pointWeight;
         }
@@ -247,20 +247,6 @@ const HoursBarometer = () => {
     <Layout showNav={false}>
       <h1>By Week</h1>
       <div style={{ display: "flex", flexFlow: "row wrap", gap: "1rem" }}>
-        {Object.keys(AVERAGE_MAP).map((key) => (
-          <label htmlFor={key} key={key}>
-            <input
-              type="radio"
-              id={key}
-              value={key}
-              checked={key == avgType}
-              onChange={() => setAvgType(key)}
-            />
-            {key}
-          </label>
-        ))}
-      </div>
-      <div style={{ display: "flex", flexFlow: "row wrap", gap: "1rem" }}>
         {ATTRIBUTES.map((attr) => (
           <label htmlFor={attr} key={attr}>
             <input
@@ -271,6 +257,20 @@ const HoursBarometer = () => {
               onChange={() => setAttribute(attr)}
             />
             {attr}
+          </label>
+        ))}
+      </div>
+      <div style={{ display: "flex", flexFlow: "row wrap", gap: "1rem" }}>
+        {Object.keys(AVERAGE_MAP).map((key) => (
+          <label htmlFor={key} key={key}>
+            <input
+              type="radio"
+              id={key}
+              value={key}
+              checked={key == avgType}
+              onChange={() => setAvgType(key)}
+            />
+            {key}
           </label>
         ))}
       </div>
@@ -350,9 +350,9 @@ const HoursBarometer = () => {
           })}
           <tr>
             <td />
-            <td />
+            <td>Total</td>
             {DISPLAY_YEARS.map((year) => (
-              <td key={year} />
+              <td key={year}>{asDecimal.format(yearlyTotals[year])}</td>
             ))}
             <td />
             <td>
