@@ -28,12 +28,18 @@ const AVERAGE_MAP = {
 const YEAR_WEIGHTS = {
   2017: 1,
   2018: 3,
-  // 2019 ignored for ... COVID,
+  2019: 0, // ignored for ... COVID
   2020: 1,
   2021: 1,
 };
 
-const SKIP_WEEKS = [26, 27, 28, 29, 30, 35];
+const SKIP_WEEKS = {
+  "Approved Hours": [26, 27, 28, 29, 30, 35],
+  "SAT/ACT Prep": [26, 27, 28, 29, 30, 35],
+  "SSAP Prep": [26, 27],
+  "Admissions Consulting": [],
+  Other: [26, 27, 28, 29, 30, 35],
+};
 
 const SY_WEEK_MONTH_MAP = {
   2: "July",
@@ -86,6 +92,7 @@ const LineChart = ({
   width = 400,
   dataset,
   withLegend = false,
+  showTrend = true,
 }) => {
   const series = PAST_YEARS.map((year, yIndex) => ({
     label: year,
@@ -144,20 +151,21 @@ const LineChart = ({
             />
           );
         })}
-        {trends.map((line, lineIndex) => {
-          const color = setColors[lineIndex];
+        {showTrend &&
+          trends.map((line, lineIndex) => {
+            const color = setColors[lineIndex];
 
-          return (
-            <VictoryLine
-              key={lineIndex}
-              style={{
-                data: { stroke: color },
-                parent: { border: "1px solid #ccc" },
-              }}
-              data={line.data}
-            />
-          );
-        })}
+            return (
+              <VictoryLine
+                key={lineIndex}
+                style={{
+                  data: { stroke: color },
+                  parent: { border: "1px solid #ccc" },
+                }}
+                data={line.data}
+              />
+            );
+          })}
       </VictoryChart>
       {withLegend && (
         <Legend
@@ -174,6 +182,7 @@ const LineChart = ({
 const HoursBarometer = () => {
   const [attribute, setAttribute] = React.useState(ATTRIBUTES[0]);
   const [avgType, setAvgType] = React.useState("simple");
+  const [showTrend, setShowTrend] = React.useState(true);
 
   const weekNumbers = Array.from(new Set(data.map((wk) => wk["SY Week"]))).sort(
     (a, b) => a - b
@@ -197,8 +206,8 @@ const HoursBarometer = () => {
   const avgFunc = AVERAGE_MAP[avgType];
   const movingAverages = avgFunc(weeklyValues);
 
-  const augData = percData.map((d) => {
-    if (SKIP_WEEKS.includes(d["SY Week"])) {
+  const avgData = percData.map((d) => {
+    if (SKIP_WEEKS[attribute].includes(d["SY Week"])) {
       return { ...d, avg: d.syPerc }; // don't use averages
     } else {
       return { ...d, avg: movingAverages[d.index] || d.syPerc };
@@ -207,7 +216,7 @@ const HoursBarometer = () => {
 
   const compositeData = weekNumbers
     .map((wkNum) => {
-      const weekCollection = augData.filter((d) => d["SY Week"] == wkNum);
+      const weekCollection = avgData.filter((d) => d["SY Week"] == wkNum);
       let runningTotal = 0;
       let divideBy = 0;
 
@@ -230,7 +239,7 @@ const HoursBarometer = () => {
     })
     .filter((p) => !Number.isNaN(p.syPerc));
 
-  const dataset = [...augData, ...compositeData];
+  const dataset = [...avgData, ...compositeData];
 
   let forecasts = [];
 
@@ -265,8 +274,25 @@ const HoursBarometer = () => {
           </label>
         ))}
       </div>
+      <div style={{ display: "flex", flexFlow: "row wrap", gap: "1rem" }}>
+        <label htmlFor={"showTrend"}>
+          <input
+            type="checkbox"
+            id={"showTrend"}
+            checked={showTrend}
+            onChange={() => setShowTrend((prev) => !prev)}
+          />
+          Show Lines
+        </label>
+      </div>
 
-      <LineChart dataset={dataset} width={800} height={300} withLegend />
+      <LineChart
+        dataset={dataset}
+        width={800}
+        height={300}
+        withLegend
+        showTrend={showTrend}
+      />
 
       <table>
         <thead>
