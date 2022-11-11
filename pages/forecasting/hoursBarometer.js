@@ -34,8 +34,8 @@ const YEAR_WEIGHTS = {
 };
 
 const SKIP_WEEKS = {
-  "Approved Hours": [22, 23, 26, 27, 28, 29, 30, 35],
-  "SAT/ACT Prep": [25, 26, 27, 28, 29, 30, 35],
+  "Approved Hours": [22, 23, 26, 27, 28, 29, 30, 34, 35],
+  "SAT/ACT Prep": [25, 26, 27, 28, 29, 30, 34, 35],
   "SSAP Prep": [26, 27],
   "Admissions Consulting": [],
   Other: [22, 23, 24, 26, 27, 28, 29, 30, 35],
