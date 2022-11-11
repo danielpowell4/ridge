@@ -35,10 +35,10 @@ const YEAR_WEIGHTS = {
 
 const SKIP_WEEKS = {
   "Approved Hours": [22, 23, 26, 27, 28, 29, 30, 35],
-  "SAT/ACT Prep": [26, 27, 28, 29, 30, 35],
+  "SAT/ACT Prep": [25, 26, 27, 28, 29, 30, 35],
   "SSAP Prep": [26, 27],
   "Admissions Consulting": [],
-  Other: [26, 27, 28, 29, 30, 35],
+  Other: [22, 23, 24, 26, 27, 28, 29, 30, 35],
 };
 
 const SY_WEEK_MONTH_MAP = {
@@ -144,7 +144,7 @@ const LineChart = ({
             <VictoryScatter
               key={setIndex}
               style={{
-                data: { fill: color, fillOpacity: 0.4 },
+                data: { fill: color, fillOpacity: 0.5 },
                 parent: { border: "1px solid #ccc" },
               }}
               data={set.data}
@@ -159,7 +159,7 @@ const LineChart = ({
               <VictoryLine
                 key={lineIndex}
                 style={{
-                  data: { stroke: color },
+                  data: { stroke: color, strokeOpacity: 0.9 },
                   parent: { border: "1px solid #ccc" },
                 }}
                 data={line.data}
@@ -246,7 +246,15 @@ const HoursBarometer = () => {
   return (
     <Layout showNav={false}>
       <h1>By Week</h1>
-      <div style={{ display: "flex", flexFlow: "row wrap", gap: "1rem" }}>
+      <h4 style={{ margin: 0 }}>Hours Group</h4>
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "row wrap",
+          gap: "1rem",
+          marginBottom: "1rem",
+        }}
+      >
         {ATTRIBUTES.map((attr) => (
           <label htmlFor={attr} key={attr}>
             <input
@@ -260,7 +268,15 @@ const HoursBarometer = () => {
           </label>
         ))}
       </div>
-      <div style={{ display: "flex", flexFlow: "row wrap", gap: "1rem" }}>
+      <h4 style={{ margin: 0 }}>Average Formula</h4>
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "row wrap",
+          gap: "1rem",
+          marginBottom: "1rem",
+        }}
+      >
         {Object.keys(AVERAGE_MAP).map((key) => (
           <label htmlFor={key} key={key}>
             <input
@@ -274,7 +290,15 @@ const HoursBarometer = () => {
           </label>
         ))}
       </div>
-      <div style={{ display: "flex", flexFlow: "row wrap", gap: "1rem" }}>
+      <h4 style={{ margin: 0 }}>Graph Options</h4>
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "row wrap",
+          gap: "1rem",
+          marginBottom: "1rem",
+        }}
+      >
         <label htmlFor={"showTrend"}>
           <input
             type="checkbox"
