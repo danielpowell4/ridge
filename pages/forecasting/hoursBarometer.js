@@ -1,14 +1,20 @@
 import * as React from "react";
 import { Layout } from "../../components";
-import weeklyLessons from "../scorecard/weeklyLessons.json";
+import weeklyLessons from "./lessonHoursByType.json";
 import { asPercent } from "../../lib/scorecardHelper";
 import { ma, dma, ema, sma, wma } from "moving-averages";
 
 const data = weeklyLessons.map((d, index) => ({ ...d, index }));
 
-const ATTRIBUTES = ["Approved Hours"];
-const PAST_YEARS = [2018, 2020, 2021];
-const DISPLAY_YEARS = [2018, 2020, 2021, "Average"];
+const ATTRIBUTES = [
+  "Approved Hours",
+  "SAT/ACT Prep",
+  "SSAP Prep",
+  "Admissions Consulting",
+  "Other",
+];
+const PAST_YEARS = [2017, 2018, 2020, 2021];
+const DISPLAY_YEARS = [2017, 2018, 2020, 2021, "Average"];
 const CURRENT_YEAR = 2022;
 
 const AVERAGE_MAP = {
@@ -20,6 +26,7 @@ const AVERAGE_MAP = {
 };
 
 const YEAR_WEIGHTS = {
+  2017: 1,
   2018: 3,
   // 2019 ignored for ... COVID,
   2020: 1,
@@ -165,7 +172,7 @@ const LineChart = ({
 };
 
 const HoursBarometer = () => {
-  const attribute = ATTRIBUTES[0];
+  const [attribute, setAttribute] = React.useState(ATTRIBUTES[0]);
   const [avgType, setAvgType] = React.useState("simple");
 
   const weekNumbers = Array.from(new Set(data.map((wk) => wk["SY Week"]))).sort(
@@ -241,6 +248,20 @@ const HoursBarometer = () => {
               onChange={() => setAvgType(key)}
             />
             {key}
+          </label>
+        ))}
+      </div>
+      <div style={{ display: "flex", flexFlow: "row wrap", gap: "1rem" }}>
+        {ATTRIBUTES.map((attr) => (
+          <label htmlFor={attr} key={attr}>
+            <input
+              type="radio"
+              id={attr}
+              value={attr}
+              checked={attr == attribute}
+              onChange={() => setAttribute(attr)}
+            />
+            {attr}
           </label>
         ))}
       </div>
