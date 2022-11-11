@@ -13,8 +13,8 @@ const ATTRIBUTES = [
   "Admissions Consulting",
   "Other",
 ];
-const PAST_YEARS = [2017, 2018, 2020, 2021];
-const DISPLAY_YEARS = [2017, 2018, 2020, 2021, "Average"];
+const PAST_YEARS = [2017, 2018, 2019, 2020, 2021];
+const DISPLAY_YEARS = [2017, 2018, 2019, 2020, 2021, "Average"];
 const CURRENT_YEAR = 2022;
 
 const AVERAGE_MAP = {
