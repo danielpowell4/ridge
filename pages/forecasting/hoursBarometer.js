@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Layout } from "../../components";
 import weeklyLessons from "./lessonHoursByType.json";
-import { asDecimal } from "../../lib/scorecardHelper";
+import { asPercent, asDecimal } from "../../lib/scorecardHelper";
 import { ma, dma, ema, sma, wma } from "moving-averages";
 
 const data = weeklyLessons.map((d, index) => ({ ...d, index }));
@@ -179,6 +179,86 @@ const LineChart = ({
   );
 };
 
+const AccumulationChart = ({
+  height = 400,
+  width = 400,
+  dataset,
+  withLegend = false,
+}) => {
+  const series = PAST_YEARS.map((year, yIndex) => ({
+    label: year,
+    data: dataset
+      .filter((wk) => wk["SY Year"] === year)
+      .map((wk) => {
+        const prev = dataset.filter(
+          (other) =>
+            other["SY Year"] === year && other["SY Week"] <= wk["SY Week"]
+        );
+        const sytdPerc = prev.reduce((acc, item) => acc + item.syPerc, 0);
+
+        return {
+          x: wk["SY Week"],
+          y: sytdPerc,
+          tip:
+            yIndex === 0
+              ? [
+                  "Wk " + wk["SY Week"],
+                  `${wk["SY Year"]}: ${asPercent.format(sytdPerc)}`,
+                ]
+              : [`${wk["SY Year"]}: ${asPercent.format(sytdPerc)}`],
+        };
+      })
+      .filter((p) => !Number.isNaN(p.y)),
+  }));
+
+  return (
+    <React.Fragment>
+      <VictoryChart
+        theme={VictoryTheme.material}
+        height={height}
+        width={width}
+        padding={{ left: 90, top: 50, right: 10, bottom: 50 }}
+        margin="auto"
+        containerComponent={
+          <VictoryVoronoiContainer
+            voronoiDimension="x"
+            labels={({ datum }) => datum.tip}
+            labelComponent={
+              <VictoryTooltip
+                cornerRadius={0}
+                flyoutStyle={{ fill: "white" }}
+              />
+            }
+          />
+        }
+      >
+        {series.map((set, setIndex) => {
+          const color = setColors[setIndex];
+
+          return (
+            <VictoryScatter
+              key={setIndex}
+              style={{
+                data: { fill: color, fillOpacity: 0.5 },
+                parent: { border: "1px solid #ccc" },
+              }}
+              data={set.data}
+            />
+          );
+        })}
+      </VictoryChart>
+      {withLegend && (
+        <Legend
+          labels={series.map(({ label }, setIndex) => ({
+            label,
+            fill: setColors[setIndex],
+          }))}
+        />
+      )}
+    </React.Fragment>
+  );
+};
+
 const HoursBarometer = () => {
   const [attribute, setAttribute] = React.useState(ATTRIBUTES[0]);
   const [avgType, setAvgType] = React.useState("simple");
@@ -245,7 +325,7 @@ const HoursBarometer = () => {
 
   return (
     <Layout showNav={false}>
-      <h1>By Week</h1>
+      <h1>% SY Hours By Week</h1>
       <h4 style={{ margin: 0 }}>Hours Group</h4>
       <div
         style={{
@@ -316,6 +396,13 @@ const HoursBarometer = () => {
         height={300}
         withLegend
         showTrend={showTrend}
+      />
+
+      <AccumulationChart
+        dataset={dataset}
+        width={800}
+        height={300}
+        withLegend
       />
 
       <table>
