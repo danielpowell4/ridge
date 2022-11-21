@@ -4102,5 +4102,23 @@
     "Online Hours": 899.0,
     "At Client Hours": 385.0,
     "PP Office Hours": 133.0
+  },
+  {
+    "SY Year": 2022,
+    "SY Week": 21,
+    "Week Starting": "2022-11-14",
+    "Approved Hours": 1305.25,
+    "Subject Tutoring Hours": 252.25,
+    "SAT/ACT Prep Hours": 799.75,
+    "SSAP Prep Hours": 102.75,
+    "Admissions Consulting Hours": 94.75,
+    "Executive Functioning/Academic Skills Hours": 36.25,
+    "Graduate Level Test Prep Hours": 2.5,
+    "Other Hours": 2.0,
+    "The Coding Space Hours": 15.0,
+    "Camp Program Hours": 0.0,
+    "Online Hours": 827.75,
+    "At Client Hours": 354.5,
+    "PP Office Hours": 123.0
   }
 ]
